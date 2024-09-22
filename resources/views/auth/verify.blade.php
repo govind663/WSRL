@@ -16,32 +16,6 @@
     <!-- Meta Author-->
     <meta name="author" content="Admin">
 
-    <!-- Open Graph Meta -->
-    <meta property="og:title" content="Verify Your Email Address">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="Verify your email address">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('/assets/images/logo.png') }}">
-
-    <!-- Facebook Meta -->
-    <meta property="og:site_name" content="Admin">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:secure_url" content="{{ asset('/assets/images/logo.png') }}">
-    <meta property="og:image:type" content="image/png">
-
-    <!-- Twitter Meta -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Verify Your Email Address">
-    <meta name="twitter:description" content="Verify your email address">
-    <meta name="twitter:image" content="{{ asset('/assets/images/logo.png') }}">
-
-    <!-- Apple Meta -->
-    <meta name="apple-mobile-web-app" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Admin">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -51,12 +25,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title> Verify Your Email Address </title>
+    <title>WSRL | Verify Your Email Address </title>
 
-    <!-- Favicon-->
-    <link rel="apple-touch-icon" href="{{ asset('/assets/images/favicon.png') }}">
-    <link rel="icon" href="{{ asset('/assets/images/favicon.png') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('/assets/images/favicon.png') }}" type="image/x-icon">
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/') }}/assets/vendors/images/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('/') }}/assets/vendors/images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url('/') }}/assets/vendors/images/favicon-16x16.png" />
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

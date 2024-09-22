@@ -27,7 +27,7 @@ class ForgotPasswordController extends Controller
                 'unique:password_resets,email',  // check unique email in password_resets table
             ],
         ],[
-            'email.required' => 'Email is required.',
+            'email.required' => 'Email Id is required.',
             'email.email' => 'Invalid email format.',
             'email.exists' => 'Email does not exist.',
             'email.regex' => 'Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.',
