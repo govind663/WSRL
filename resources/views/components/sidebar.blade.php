@@ -108,9 +108,8 @@
             <ul id="accordion-menu">
                 <li>
                     <a href="{{ route('admin.dashboard') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'admin.dashboard') ? 'active' : '' }}">
-                        <span class="micon fa fa-house"></span>
-
-                        <span class="mtext">House</span>
+                        <span class="micon bi bi-house"></span>
+                        <span class="mtext">Home</span>
                     </a>
                 </li>
 

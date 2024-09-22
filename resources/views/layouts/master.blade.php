@@ -9,7 +9,7 @@
 
 <body>
     {{-- Pre Loader Start --}}
-    <x-pre-loader />
+    {{-- <x-pre-loader /> --}}
     {{-- Pre Loader End --}}
 
     <!-- Header Start -->
