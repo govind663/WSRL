@@ -4,12 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +28,12 @@ class User extends Authenticatable
         'updated_by',
         'updated_at',
         'deleted_by',
+        'deleted_at',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
         'deleted_at',
     ];
 
@@ -50,4 +59,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }

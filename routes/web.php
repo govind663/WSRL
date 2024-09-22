@@ -12,6 +12,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -41,4 +43,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
     // ===== Admin Dashboard
     Route::get('home', [HomeController::class, 'adminHome'])->name('admin.dashboard');
 
+    // ===== Manage Role
+    Route::resource('roles', RoleController::class);
+
+    // ===== Manage User
+    Route::resource('users', UserController::class);
 });
