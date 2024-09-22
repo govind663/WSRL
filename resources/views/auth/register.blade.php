@@ -16,10 +16,9 @@
     <!-- Title -->
     <title>WSRL | Register</title>
 
-    <!-- Site favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/') }}/assets/vendors/images/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('/') }}/assets/vendors/images/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url('/') }}/assets/vendors/images/favicon-16x16.png" />
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-param" content="_token">
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url('/') }}/assets/vendors/styles/core.css" />

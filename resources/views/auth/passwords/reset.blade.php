@@ -37,7 +37,7 @@
             </div>
             <div class="login-menu">
                 <ul>
-                    <li><a href="{{ route('/') }}">Login</a></li>
+                    <li><a href="{{ route('/') }}">{{ __('Login') }}</a></li>
                 </ul>
             </div>
         </div>
@@ -51,7 +51,9 @@
                 <div class="col-md-6 col-lg-5">
                     <div class="login-box bg-white box-shadow border-radius-10">
                         <div class="login-title">
-                            <h2 class="text-center text-primary">Reset Password</h2>
+                            <h2 class="text-center text-primary">
+                                {{ __('Reset Password') }}
+                            </h2>
                         </div>
                         <form method="POST" action="{{ route('admin.password.update') }}" aria-label="{{ __('Register') }}" enctype="multipart/form">
                             @csrf

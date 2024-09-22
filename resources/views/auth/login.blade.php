@@ -16,6 +16,10 @@
     <!-- Title -->
     <title>WSRL | Login</title>
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-param" content="_token">
+
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url('/') }}/assets/vendors/styles/core.css" />
     <link rel="stylesheet" type="text/css" href="{{ url('/') }}/assets/vendors/styles/icon-font.min.css" />
@@ -51,6 +55,7 @@
                 <div class="col-md-6 col-lg-5">
                     <div class="login-box bg-white box-shadow border-radius-10">
                         <div class="login-title">
+
                             <h2 class="text-center text-primary">Login</h2>
                         </div>
                         <form method="POST" action="{{ route('admin.login.store') }}" aria-label="{{ __('Login') }}" enctype="multipart/form">
@@ -82,10 +87,10 @@
                             <input class="form-check-input" type="hidden" name="remember_token" id="remember_token" value="true">
 
                             <div class="row">
-                                <div class="col-sm-12 text-right pb-2">
+                                <div class="col-sm-12 text-right pb-3">
                                     @if (Route::has('admin.forget-password.request'))
-                                        <a  href="{{ route('admin.forget-password.request') }}" class="text-muted">
-                                            <b>{{ __('Forgot Password ?') }}</b>
+                                        <a  href="{{ route('admin.forget-password.request') }}" class="text-primary">
+                                            {{ __('Forgot Password ?') }}
                                         </a>
                                     @endif
                                 </div>
