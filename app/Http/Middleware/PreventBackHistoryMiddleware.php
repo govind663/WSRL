@@ -71,12 +71,6 @@ class PreventBackHistoryMiddleware
             } else {
                 $request->session()->put('last_activity', time());
             }
-        } elseif($request->is('admin/*') || $request->is('admin')){
-            return redirect()->route('admin.login');
-        } else{
-            $request->session()->put('last_activity', time());
-            $request->session()->regenerate();
-            return $response;
         }
 
         // Set a CSRF token in the session
