@@ -47,11 +47,20 @@
                     <span class="user-icon">
                         <img src="{{ asset('assets/vendors/images/photo1.jpg') }}" alt="" />
                     </span>
-                    <span class="user-name">
-                        {{ Auth::user()->name }}
-                    </span>
+                    @if (Auth::user()->department_id == 1)
+                    <span class="user-name">Admin</span>
+                    @elseif (Auth::user()->department_id == 2)
+                    <span class="user-name">Packaging Department</span>
+                    @elseif (Auth::user()->department_id == 3)
+                    <span class="user-name">Dispatch Department</span>
+                    @else
+                    <span class="user-name">Super Admin</span>
+                    @endif
                 </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list p-2">
+                    <h6 class="dropdown-item-text text-justify">Hi, {{ Auth::user()->name }}!</h6>
+
                     {{-- <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
                     <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
                     <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a> --}}
