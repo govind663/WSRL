@@ -23,21 +23,57 @@ class UserRequest extends FormRequest
     {
         if ($this->id){
             $rule = [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email,'.$this->id,
-                'password' => 'same:confirm-password',
-                'roles' => 'required'
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    'regex:/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/i',
+                ],
+                'department_id' => [
+                    'required',
+                    'numeric',
+                ],
+                'roles' => [
+                    'required',
+                ],
             ];
         }else{
             $rule = [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|same:confirm-password',
-                'roles' => 'required'
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    'regex:/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/i',
+                ],
+                'password' => [
+                    'required',
+                    'confirmed',
+                    'min:8',
+                ],
+                'password_confirmation' => [
+                    'required',
+                    'same:password',
+                ],
+                'department_id' => [
+                    'required',
+                    'numeric',
+                ],
+                'roles' => [
+                    'required',
+                ],
             ];
         }
         return $rule;
     }
+
 
     public function messages()
     {
@@ -45,11 +81,12 @@ class UserRequest extends FormRequest
             'name.required' => __('Name is required'),
             'email.required' => __('Email Id is required'),
             'email.unique' => __('Email Id already exists'),
-            'password.required' => __('Password is required'),
             'roles.required' => __('Role is required'),
+            'password.required' => __('Password is required'),
             'password.same' => __('Password and Confirm Password do not match'),
             'confirm-password.same' => __('Password and Confirm Password do not match'),
             'confirm-password.required' => __('Confirm Password is required'),
+            'department_id.required' => __('Department is required'),
         ];
     }
 }

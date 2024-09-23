@@ -15,6 +15,14 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:user-create', ['only' => ['create','store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +39,8 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        $roles = Role::pluck('name','name')->orderBy("id","desc")->whereNull('deleted_at')->get();
+        $roles = Role::pluck('name','name')->all();
+
         return view('users.create',[
             'roles' => $roles
         ]);
@@ -85,8 +94,8 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        $roles = Role::pluck('name','name')->orderBy("id","desc")->whereNull('deleted_at')->get();
-        $userRole = $user->roles->pluck('name','name')->orderBy("id","desc")->whereNull('deleted_at')->get();
+        $roles = Role::pluck('name','name')->all();
+        $userRole = $user->roles->pluck('name','name')->all();
         return view('users.edit',[
             'user' => $user,
             'roles' => $roles,

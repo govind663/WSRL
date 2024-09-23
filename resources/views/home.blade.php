@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-WSRL | Home
+WSRL | WSRL
 @endsection
 
 @push('styles')
