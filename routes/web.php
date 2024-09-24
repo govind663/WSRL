@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\QrCodeController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -48,4 +49,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
     // ===== Manage User
     Route::resource('users', UserController::class);
+
+    // ===== Manage QR Code
+    Route::resource('qrcode', QrCodeController::class);
+
 });

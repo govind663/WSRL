@@ -28,7 +28,14 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::orderBy("id","desc")->whereNull('deleted_at')->get();
+        $query = User::orderBy("id", "desc")->whereNull('deleted_at');
+
+        if(Auth::user()->department_id == 2 || Auth::user()->department_id == 3){
+            $query->where('id', Auth::user()->id);
+        }
+
+        $users = $query->get();
+
         return view('users.index',[
             'users' => $users
         ]);
