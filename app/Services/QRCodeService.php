@@ -20,8 +20,8 @@ class QRCodeService
 
         // Generate the QR code and save it in PNG format
         try {
-            QrCode::format('png')
-                    ->size(200)
+            // Generate QR code
+            QrCode::size(200)
                     ->generate($data['content'], $qrCodePath);
 
             // Check if file was created

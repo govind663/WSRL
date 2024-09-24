@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-WSRL | Add QR Code
+WSRL | Generate QR Code
 @endsection
 
 @push('styles')
@@ -14,7 +14,7 @@ WSRL | Add QR Code
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="title">
-                        <h4>Add QR Code</h4>
+                        <h4>Generate QR Code</h4>
                     </div>
                     <nav aria-label="breadcrumb" role="navigation">
                         <ol class="breadcrumb">

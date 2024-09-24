@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('unique_number')->unique();
             $table->foreignIdFor(User::class)->nullable()->constrained()->index();
             $table->integer('quantity');
-            $table->string('internal_qr_code')->nullable();
-            $table->string('external_qr_code')->nullable();
+            $table->text('internal_qr_code')->nullable();
+            $table->text('external_qr_code')->nullable();
 
             // Add columns for the Counts of the internal and external QR codes
             $table->integer('internal_qr_code_count')->default(0);

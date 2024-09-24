@@ -72,9 +72,9 @@ WSRL | Manaage  QR Code
                             <td>{{ $value->internal_qr_code_count }}</td>
                             <td>{{ $value->external_qr_code_count }}</td>
                             <td class="no-export">
-                                <a href="{{ route('qrcode.edit', $value->id) }}">
+                                <a href="{{ route('qrcode.show', $value->id) }}">
                                     <button class="btn btn-warning btn-sm">
-                                        <i class="micon dw dw-pencil-1"></i>
+                                        <i class="micon dw dw-eye"></i>
                                     </button>
                                 </a>
                             </td>
