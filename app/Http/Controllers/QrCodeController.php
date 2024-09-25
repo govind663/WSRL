@@ -6,6 +6,7 @@ use App\Http\Requests\QrCodeRequest;
 use App\Models\QrCode;
 use App\Services\QRCodeService;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode as GenerateQrCode;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -54,35 +55,34 @@ class QrCodeController extends Controller
             // Generate a unique number for the QR codes
             $uniqueNumber = uniqid();
 
-            // Generate Internal QR
-            $internalQRCodeContent = QRCodeService::generate([
-                'content' => 'Internal: ' . $uniqueNumber,
-                'unique_number' => $uniqueNumber . '_internal'
-            ]);
+            // Define QR code size and background color
+            $qrCodeSize = 300;
+            $qrCodeBackgroundColor = [255, 55, 0]; // RGB values for background color
 
-            // Generate External QR
-            $externalQRCodeContent = QRCodeService::generate([
-                'content' => 'External: ' . $uniqueNumber,
-                'unique_number' => $uniqueNumber . '_external'
-            ]);
+            // Generate Internal QR as PNG
+            $internalQRCodeContent = GenerateQrCode::format('png')
+                ->size($qrCodeSize)
+                ->backgroundColor($qrCodeBackgroundColor[0], $qrCodeBackgroundColor[1], $qrCodeBackgroundColor[2])
+                ->generate('Internal: ' . $uniqueNumber);
 
-            // Check if QR codes are generated
+            // Generate External QR as PNG
+            $externalQRCodeContent = GenerateQrCode::format('png')
+                ->size($qrCodeSize)
+                ->backgroundColor($qrCodeBackgroundColor[0], $qrCodeBackgroundColor[1], $qrCodeBackgroundColor[2])
+                ->generate('External: ' . $uniqueNumber);
+
+            // Check if QR codes are generated correctly
             if (!$internalQRCodeContent || !$externalQRCodeContent) {
                 return redirect()->back()->with('error', 'Failed to generate QR codes.');
             }
 
-            // Ensure content is in the correct format
-            if (!is_string($internalQRCodeContent) || !is_string($externalQRCodeContent)) {
-                return redirect()->back()->with('error', 'QR code content generation returned an invalid format.');
-            }
-
-            // Save Internal QR code as an image file
+            // Save Internal QR code as a PNG image file
             $internalFileName = $uniqueNumber . '_internal.png';
             if (file_put_contents($qrCodePath . '/' . $internalFileName, $internalQRCodeContent) === false) {
                 return redirect()->back()->with('error', 'Failed to save internal QR code.');
             }
 
-            // Save External QR code as an image file
+            // Save External QR code as a PNG image file
             $externalFileName = $uniqueNumber . '_external.png';
             if (file_put_contents($qrCodePath . '/' . $externalFileName, $externalQRCodeContent) === false) {
                 return redirect()->back()->with('error', 'Failed to save external QR code.');
@@ -133,7 +133,6 @@ class QrCodeController extends Controller
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
-
 
     /**
      * Display the specified resource.
