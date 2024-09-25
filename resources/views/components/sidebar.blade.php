@@ -130,9 +130,9 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('qrcode.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'qrcode.index') || ($currentRoute === 'qrcode.create') || ($currentRoute === 'qrcode.edit') ? 'active' : '' }}">
+                    <a href="{{ route('qrcode.create') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'qrcode.create') ? 'active' : '' }}">
                         <span class="micon bi bi-person"></span>
-                        <span class="mtext">Manage QR Code</span>
+                        <span class="mtext">Generate QR Code</span>
                     </a>
                 </li>
 

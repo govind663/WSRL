@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\QrCodeRequest;
 use App\Models\QrCode;
-use App\Services\QRCodeService;
-use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as GenerateQrCode;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -17,11 +16,7 @@ class QrCodeController extends Controller
      */
     public function index()
     {
-        $qrcodes = QrCode::with('user')->orderBy("id", "desc")->whereNull('deleted_at')->get();
-
-        return view('qrcode.index', [
-            'qrcodes' => $qrcodes
-        ]);
+        //
     }
 
     /**
@@ -41,123 +36,81 @@ class QrCodeController extends Controller
 
         try {
             $quantity = $data['quantity'];
-            $internalQRCodes = [];  // Array to store internal QR codes
-            $externalQRCodes = [];  // Array to store external QR codes
+            $internalQRCodes = [];
+            $externalQRCodes = [];
 
-            // Define path where QR codes will be stored
-            $qrCodePath = public_path('wsrl/images/qrcodes');
+            // Get the current user's information
+            $user = Auth::user();
+            $userId = $user->id;
+            $userName = $user->name;
+            $userEmail = $user->email;
 
-            // Create the directory if it doesn't exist
-            if (!file_exists($qrCodePath)) {
-                mkdir($qrCodePath, 0775, true);
+            // Loop through the quantity and generate internal/external QR codes
+            for ($i = 0; $i < $quantity; $i++) {
+                // Generate a unique number for each QR code
+                $uniqueNumber = uniqid();
+
+                // Define QR code size
+                $qrCodeSize = 300;
+
+                // Generate Internal QR Code (embed user information in the QR content)
+                $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)
+                    ->generate("Internal QR\nUser: $userName\nEmail: $userEmail\nUniqueID: $uniqueNumber");
+
+                // Generate External QR Code (embed user information in the QR content)
+                $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)
+                    ->generate("External QR\nUser: $userName\nEmail: $userEmail\nUniqueID: $uniqueNumber");
+
+                // Append to internal and external QR code arrays
+                $internalQRCodes[] = [
+                    'qr_code' => $internalQRCodeContent,
+                    'unique_number' => $uniqueNumber . '_internal',
+                    'status' => 'active'
+                ];
+
+                $externalQRCodes[] = [
+                    'qr_code' => $externalQRCodeContent,
+                    'unique_number' => $uniqueNumber . '_external',
+                    'status' => 'active'
+                ];
             }
 
-            // Generate a unique number for the QR codes
-            $uniqueNumber = uniqid();
-
-            // Define QR code size and background color
-            $qrCodeSize = 300;
-            $qrCodeBackgroundColor = [255, 55, 0]; // RGB values for background color
-
-            // Generate Internal QR as PNG
-            $internalQRCodeContent = GenerateQrCode::format('png')
-                ->size($qrCodeSize)
-                ->backgroundColor($qrCodeBackgroundColor[0], $qrCodeBackgroundColor[1], $qrCodeBackgroundColor[2])
-                ->generate('Internal: ' . $uniqueNumber);
-
-            // Generate External QR as PNG
-            $externalQRCodeContent = GenerateQrCode::format('png')
-                ->size($qrCodeSize)
-                ->backgroundColor($qrCodeBackgroundColor[0], $qrCodeBackgroundColor[1], $qrCodeBackgroundColor[2])
-                ->generate('External: ' . $uniqueNumber);
-
-            // Check if QR codes are generated correctly
-            if (!$internalQRCodeContent || !$externalQRCodeContent) {
-                return redirect()->back()->with('error', 'Failed to generate QR codes.');
-            }
-
-            // Save Internal QR code as a PNG image file
-            $internalFileName = $uniqueNumber . '_internal.png';
-            if (file_put_contents($qrCodePath . '/' . $internalFileName, $internalQRCodeContent) === false) {
-                return redirect()->back()->with('error', 'Failed to save internal QR code.');
-            }
-
-            // Save External QR code as a PNG image file
-            $externalFileName = $uniqueNumber . '_external.png';
-            if (file_put_contents($qrCodePath . '/' . $externalFileName, $externalQRCodeContent) === false) {
-                return redirect()->back()->with('error', 'Failed to save external QR code.');
-            }
-
-            // Append to internal and external QR code arrays with only filenames
-            $internalQRCodes[] = [
-                'qr_code' => $internalFileName,  // Store only the filename
-                'unique_number' => $uniqueNumber . '_internal',
-                'status' => 'active'
-            ];
-
-            $externalQRCodes[] = [
-                'qr_code' => $externalFileName,  // Store only the filename
-                'unique_number' => $uniqueNumber . '_external',
-                'status' => 'active'
-            ];
-
-            // Create a new QrCode record (with JSON fields)
+            // Create a new QrCode record in the database
             $qrCode = new QrCode();
-            $qrCode->unique_number = $uniqueNumber;
-            $qrCode->user_id = Auth::user()->id;
-            $qrCode->quantity = $quantity; // Store the total quantity
-            $qrCode->internal_qr_code = json_encode(array_column($internalQRCodes, 'qr_code'));  // Store only filenames as JSON
-            $qrCode->external_qr_code = json_encode(array_column($externalQRCodes, 'qr_code'));  // Store only filenames as JSON
-
-            // Save the internal_qr_code_count
+            $qrCode->unique_number = uniqid();
+            $qrCode->user_id = $userId;
+            $qrCode->quantity = $quantity;
             $qrCode->internal_qr_code_count = count($internalQRCodes);
-
-            // Save the external_qr_code_count
             $qrCode->external_qr_code_count = count($externalQRCodes);
-
-            // Save the internal_qr_code_status (enum('active', 'printed', 'scanned'))
             $qrCode->internal_qr_code_status = 'active';
-
-            // Save the external_qr_code_status (enum('active', 'printed', 'scanned'))
             $qrCode->external_qr_code_status = 'active';
-
-            // Additional fields
             $qrCode->inserted_dt = Carbon::now();
-            $qrCode->inserted_by = Auth::user()->id;
-
-            // Save the record
+            $qrCode->inserted_by = $userId;
             $qrCode->save();
 
-            return redirect()->route('qrcode.index')->with('message', 'QR codes have been successfully generated.');
+            // Generate PDF with the QR codes
+            $pdf = Pdf::loadView('qrcode.pdf', [
+                'internalQRCodes' => $internalQRCodes,
+                'externalQRCodes' => $externalQRCodes,
+                'uniqueNumber' => $qrCode->unique_number,
+                'user' => $user,
+            ]);
+
+            // Return the PDF as a stream (opens in a new tab) and download
+            return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
+
         } catch (\Exception $ex) {
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $qrCode = QrCode::findOrFail($id);
-
-        // Decode the internal and external QR code filenames from JSON
-        $internalQRCodes = json_decode($qrCode->internal_qr_code);
-        $externalQRCodes = json_decode($qrCode->external_qr_code);
-
-        if (!$internalQRCodes || !$externalQRCodes) {
-            return redirect()->back()->with('error', 'Failed to retrieve QR codes.');
-        }
-
-        // Define path where QR codes are stored
-        $qrCodePath = public_path('wsrl/images/qrcodes');
-
-        return view('qrcode.show', [
-            'qrCode' => $qrCode,
-            'internalQRCodes' => $internalQRCodes,
-            'externalQRCodes' => $externalQRCodes,
-            'qrCodePath' => $qrCodePath
-        ]);
+        //
     }
 
     /**
