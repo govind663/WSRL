@@ -34,7 +34,7 @@
             display: inline-block;
             width: 210px;
             height: 210px;
-            border: 2px solid rgb(24, 24, 26); /* Blue circular border */
+            border: 6px solid rgb(24, 24, 26); /* Blue circular border */
             border-radius: 50%;
             display: flex;
             align-items: center;
