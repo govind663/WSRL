@@ -122,19 +122,32 @@
                 </li>
                 @endcan
 
+                @can('user-list')
                 <li>
                     <a href="{{ route('users.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'users.index') || ($currentRoute === 'users.create') || ($currentRoute === 'users.edit') ? 'active' : '' }}">
                         <span class="micon bi bi-person"></span>
                         <span class="mtext">Manage User</span>
                     </a>
                 </li>
+                @endcan
 
+                @can('product-list')
+                <li>
+                    <a href="{{ route('products.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'products.index') || ($currentRoute === 'products.create') || ($currentRoute === 'products.edit') ? 'active' : '' }}">
+                        <span class="micon bi bi-bag"></span>
+                        <span class="mtext">Manage Product</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('qrcode-list')
                 <li>
                     <a href="{{ route('qrcode.create') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'qrcode.create') ? 'active' : '' }}">
                         <span class="micon bi bi-person"></span>
                         <span class="mtext">Generate QR Code</span>
                     </a>
                 </li>
+                @endcan
 
             </ul>
         </div>

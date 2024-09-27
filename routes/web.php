@@ -15,12 +15,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('auth.login');
 })->name('/');
 
-Auth::routes();
+// Auth::routes();
 
 // ===== Admin Register
 Route::get('register', [RegisterController::class,'register'])->name('admin.register');
@@ -49,6 +50,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
     // ===== Manage User
     Route::resource('users', UserController::class);
+
+    // ===== Manage Product
+    Route::resource('products', ProductController::class);
 
     // ===== Manage QR Code
     Route::resource('qrcode', QrCodeController::class);

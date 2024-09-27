@@ -102,7 +102,7 @@ WSRL | Add User
                     </div>
                 </div>
 
-                <div class="form-group row mt-3">
+                {{-- <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Password : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" value="{{old('password')}}" placeholder="Enter Password.">
@@ -122,7 +122,7 @@ WSRL | Add User
                             </span>
                         @enderror
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="form-group row mt-4">
                     <label class="col-md-3"></label>
