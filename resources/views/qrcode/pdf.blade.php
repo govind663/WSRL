@@ -64,31 +64,29 @@
 </head>
 
 <body>
+    @foreach ($internalQRCodes as $index => $internalQRCode)
     <table>
-        @foreach ($internalQRCodes as $index => $internalQRCode)
         <tr>
 
             <!-- Internal QR Code Section -->
             <td class="qr-code-container">
-                <p >Internal QR Code {{ $index + 1 }}</p>
-                <div class="qr-code-wrapper">
+                <p style="text-align: left !important; padding-left:20px !important;">Internal QR Code {{ $index + 1 }}</p>
+                <div class="col-sm-4 p-3 qr-code-wrapper">
                     <br>
                     <img src="data:image/png;base64, {!! base64_encode($internalQRCode['qr_code']) !!}" alt="Internal QR Code" width="50%" height="50%">
                 </div>
             </td>
 
             <!-- External QR Code Section -->
-            <td class="qr-code-wrapper-external">
-                <p>External QR Code {{ $index + 1 }}</p>
-                <img src="data:image/png;base64, {!! base64_encode($externalQRCodes[$index]['qr_code']) !!}" alt="External QR Code">
+            <td class="qr-code-container">
+                <p style="text-align: left !important; padding-left:20px !important;">External QR Code {{ $index + 1 }}</p>
+                <div class="col-sm-4 p-3 qr-code-wrapper-external">
+                    <img src="data:image/png;base64, {!! base64_encode($externalQRCodes[$index]['qr_code']) !!}" alt="External QR Code">
+                </div>
             </td>
         </tr>
-        <br>
-            @if ($index + 1 < count($internalQRCodes))
-                <div class="page-break"></div>
-            @endif
-        @endforeach
     </table>
+    @endforeach
 </body>
 
 </html>
