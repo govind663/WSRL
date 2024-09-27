@@ -57,4 +57,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
     // ===== Manage QR Code
     Route::resource('qrcode', QrCodeController::class);
 
+    // ===== fetch-avilable-quantity
+    Route::post('fetch-avilable-quantity', [HomeController::class, 'fetchAvilableQuantity'])->name('qrcode.fetch-avilable-quantity');
+
 });

@@ -36,7 +36,7 @@ class QrCodeRequest extends FormRequest
     public function messages()
     {
         return [
-            'quantity.required' => __('Quantity is required'),
+            'quantity.required' => __('Quantity to Generate QR Codes is required'),
             'quantity.min'  => __('Quantity should be greater than or equal to 1'),
             'quantity.numeric'  => __('Quantity should be a number'),
         ];

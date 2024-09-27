@@ -9,35 +9,52 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            /* margin: 0;
-            padding: 0; */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            /* margin: 50px 0; */
         }
 
         td {
             width: 50%;
-            /* padding: 20px; */
             vertical-align: top;
             text-align: center;
         }
 
         .qr-code-container h1 {
             font-size: 24px;
-            /* margin-bottom: 10px; */
         }
 
-        .qr-code-container p {
-            /* margin: 5px 0; */
+        /* Circular border for internal QR code only */
+        .qr-code-wrapper {
+            padding-top: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            display: inline-block;
+            width: 210px;
+            height: 210px;
+            border: 2px solid rgb(24, 24, 26); /* Blue circular border */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* External image in square */
+        .qr-code-wrapper-external {
+            padding: 17px;
+            display: inline-block;
+            width: 210px;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         img {
-            width: 150px;
-            height: 150px;
+            width: 155px;
+            height: 160px;
         }
 
         .page-break {
@@ -50,22 +67,19 @@
     <table>
         @foreach ($internalQRCodes as $index => $internalQRCode)
         <tr>
+
             <!-- Internal QR Code Section -->
             <td class="qr-code-container">
-                <p>Internal QR Code {{ $index + 1 }}</p>
-                {{-- <p><strong>Name:</strong> {{ $user->name }}</p> --}}
-                {{-- <p><strong>Email:</strong> {{ $user->email }}</p>
-                <p><strong>Unique Number:</strong> {{ $internalQRCode['unique_number'] }}</p> --}}
-                <img src="data:image/png;base64, {!! base64_encode($internalQRCode['qr_code']) !!}" alt="Internal QR Code">
+                <p >Internal QR Code {{ $index + 1 }}</p>
+                <div class="qr-code-wrapper">
+                    <br>
+                    <img src="data:image/png;base64, {!! base64_encode($internalQRCode['qr_code']) !!}" alt="Internal QR Code" width="50%" height="50%">
+                </div>
             </td>
 
             <!-- External QR Code Section -->
-            <td class="qr-code-container">
-
+            <td class="qr-code-wrapper-external">
                 <p>External QR Code {{ $index + 1 }}</p>
-                {{-- <p><strong>Name:</strong> {{ $user->name }}</p> --}}
-                {{-- <p><strong>Email:</strong> {{ $user->email }}</p>
-                <p><strong>Unique Number:</strong> {{ $externalQRCodes[$index]['unique_number'] }}</p> --}}
                 <img src="data:image/png;base64, {!! base64_encode($externalQRCodes[$index]['qr_code']) !!}" alt="External QR Code">
             </td>
         </tr>

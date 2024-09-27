@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\QrCodeRequest;
+use App\Models\Product;
 use App\Models\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as GenerateQrCode;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Request;
 
 class QrCodeController extends Controller
 {
@@ -24,7 +26,12 @@ class QrCodeController extends Controller
      */
     public function create()
     {
-        return view('qrcode.create');
+        // == Fetch Product Name & Id
+        $products = Product::whereNull('deleted_at')->orderBy('id', 'asc')->get(['id', 'name']);
+
+        return view('qrcode.create', [
+            'products' => $products
+        ]);
     }
 
     /**
@@ -45,6 +52,13 @@ class QrCodeController extends Controller
             $userName = $user->name;
             $userEmail = $user->email;
 
+            // Assuming the product details are fetched based on product_id
+            $product = Product::find($request->input('product_id'));
+            $producSKU = $product->sku;
+            $productName = $product->name;
+            $productDescription = $product->description;
+            $productDescription = strip_tags($productDescription);
+
             // Loop through the quantity and generate internal/external QR codes
             for ($i = 0; $i < $quantity; $i++) {
                 // Generate a unique number for each QR code
@@ -55,11 +69,31 @@ class QrCodeController extends Controller
 
                 // Generate Internal QR Code (embed user information in the QR content)
                 $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->generate("Internal QR\nUser: $userName\nEmail: $userEmail\nUniqueID: $uniqueNumber");
+                    ->generate("
+                        Internal QR\n
+                        User Detail : - \n
+                        Name : $userName\n
+                        Email : $userEmail\n
+                        UniqueID : $uniqueNumber\n
+                        Product Detail : - \n
+                        SKU : $producSKU\n
+                        Name : $productName\n
+                        Description : $productDescription\n
+                    ");
 
                 // Generate External QR Code (embed user information in the QR content)
                 $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->generate("External QR\nUser: $userName\nEmail: $userEmail\nUniqueID: $uniqueNumber");
+                    ->generate("
+                        External QR\n
+                        User Detail : - \n
+                        Name : $userName\n
+                        Email : $userEmail\n
+                        UniqueID : $uniqueNumber\n
+                        Product Detail : - \n
+                        SKU : $producSKU\n
+                        Name : $productName\n
+                        Description : $productDescription\n
+                    ");
 
                 // Append to internal and external QR code arrays
                 $internalQRCodes[] = [
@@ -80,6 +114,7 @@ class QrCodeController extends Controller
             $qrCode->unique_number = uniqid();
             $qrCode->user_id = $userId;
             $qrCode->quantity = $quantity;
+            $qrCode->product_id = $request->input('product_id');
             $qrCode->internal_qr_code_count = count($internalQRCodes);
             $qrCode->external_qr_code_count = count($externalQRCodes);
             $qrCode->internal_qr_code_status = 'active';
@@ -87,6 +122,18 @@ class QrCodeController extends Controller
             $qrCode->inserted_dt = Carbon::now();
             $qrCode->inserted_by = $userId;
             $qrCode->save();
+
+            // ==== Update avilable quantity in product table based in product id
+            $actualAvailableQuantity = $request->input('avilable_product_quantity');
+            $currentQuantity = $request->input('current_product_quantity');
+            $newQuantity = $actualAvailableQuantity - $currentQuantity;
+            $update = [
+                'available_quantity' => $newQuantity,
+                'modified_at' => Carbon::now(),
+                'modified_by' => $userId
+            ];
+
+            Product::where('id', $request->input('product_id'))->update($update);
 
             // Generate PDF with the QR codes
             $pdf = Pdf::loadView('qrcode.pdf', [
@@ -136,4 +183,5 @@ class QrCodeController extends Controller
     {
         //
     }
+
 }
