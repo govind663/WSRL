@@ -16,6 +16,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DistributorController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -59,5 +60,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
     // ===== fetch-avilable-quantity
     Route::post('fetch-avilable-quantity', [HomeController::class, 'fetchAvilableQuantity'])->name('qrcode.fetch-avilable-quantity');
+
+    // ===== Manage Distributor
+    Route::resource('distributor', DistributorController::class);
 
 });

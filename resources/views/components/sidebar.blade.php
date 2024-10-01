@@ -131,6 +131,13 @@
                 </li>
                 @endcan
 
+                <li>
+                    <a href="{{ route('distributor.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'distributor.index') || ($currentRoute === 'distributor.create') || ($currentRoute === 'distributor.edit') ? 'active' : '' }}">
+                        <span class="micon bi bi-person-plus"></span>
+                        <span class="mtext">Manage Distributor</span>
+                    </a>
+                </li>
+
                 @can('product-list')
                 <li>
                     <a href="{{ route('products.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'products.index') || ($currentRoute === 'products.create') || ($currentRoute === 'products.edit') ? 'active' : '' }}">
