@@ -39,10 +39,14 @@ class DistributorController extends Controller
             $distributor = new Distributor();
 
             $distributor->distributor_code = $request->distributor_code;
+            $distributor->distributor_gstin = $request->distributor_gstin;
             $distributor->distributor_name = $request->distributor_name;
+            $distributor->distributor_pos = $request->distributor_pos;
             $distributor->contact_person = $request->contact_person;
             $distributor->email = $request->email;
             $distributor->address = $request->address;
+            $distributor->other_address = $request->other_address;
+            $distributor->division = $request->division;
             $distributor->city = $request->city;
             $distributor->state = $request->state;
             $distributor->postal_code = $request->postal_code;
@@ -88,10 +92,14 @@ class DistributorController extends Controller
             $distributor = Distributor::findOrFail($id);
 
             $distributor->distributor_code = $request->distributor_code;
+            $distributor->distributor_gstin = $request->distributor_gstin;
             $distributor->distributor_name = $request->distributor_name;
+            $distributor->distributor_pos = $request->distributor_pos;
             $distributor->contact_person = $request->contact_person;
             $distributor->email = $request->email;
             $distributor->address = $request->address;
+            $distributor->other_address = $request->other_address;
+            $distributor->division = $request->division;
             $distributor->city = $request->city;
             $distributor->state = $request->state;
             $distributor->postal_code = $request->postal_code;

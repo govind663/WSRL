@@ -57,13 +57,10 @@ WSRL | Manaage  Distributor
                         <tr>
                             <th>Sr. No.</th>
                             <th>Unique Code</th>
+                            <th>Distributor POS</th>
                             <th>Name</th>
                             <th>Email Id</th>
                             <th>Mobile Number</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>State</th>
-                            <th>Postal Code</th>
                             <th>Country</th>
                             <th>Status</th>
                             {{-- @can('product-edit') --}}
@@ -79,13 +76,10 @@ WSRL | Manaage  Distributor
                         <tr>
                             <td class="text-wrap text-justify">{{ ++$key }}</td>
                             <td class="text-wrap text-justify">{{ $value->distributor_code }}</td>
+                            <td class="text-wrap text-justify">{{ $value->distributor_pos }}</td>
                             <td class="text-wrap text-justify">{{ $value->distributor_name }}</td>
                             <td class="text-wrap text-justify">{{ $value->email }}</td>
                             <td class="text-wrap text-justify">{{ $value->contact_person }}</td>
-                            <td class="text-wrap text-justify">{!! $value->address !!}</td>
-                            <td class="text-wrap text-justify">{{ $value->city }}</td>
-                            <td class="text-wrap text-justify">{{ $value->state }}</td>
-                            <td class="text-wrap text-justify">{{ $value->postal_code }}</td>
                             <td class="text-wrap text-justify">{{ $value->country }}</td>
                             <td class="text-wrap text-justify">
                                 @if ($value->status == 'active')
