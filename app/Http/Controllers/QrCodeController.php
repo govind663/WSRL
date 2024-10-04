@@ -120,7 +120,7 @@ class QrCodeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, $unique_number)
+    public function show(string $unique_number)
     {
         // Retrieve the QR code record from the database
         $qrCode = QrCode::where('unique_number', $unique_number)->first();
