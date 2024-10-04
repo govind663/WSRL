@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-WSRL | Manaage  Distributor
+WSRL | Manaage  Dispatch
 @endsection
 
 @push('styles')
@@ -19,7 +19,7 @@ WSRL | Manaage  Distributor
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="title">
-                        <h4>Manage  Distributor</h4>
+                        <h4>Manage  Dispatch</h4>
                     </div>
                     <nav aria-label="breadcrumb" role="navigation">
                         <ol class="breadcrumb">
@@ -27,17 +27,17 @@ WSRL | Manaage  Distributor
                                 <a href="{{ route('admin.dashboard') }}">Home</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                Manage  Distributor
+                                Manage  Dispatch
                             </li>
                         </ol>
                     </nav>
                 </div>
 
-                @can('distributor-create')
+                @can('dispatch-create')
                 <div class="col-md-6 col-sm-12 text-right">
                     <div class="dropdown">
-                        <a class="btn btn-primary" href="{{ route('distributor.create') }}">
-                            <i class="fa fa-plus" aria-hidden="true"> </i>  Distributor
+                        <a class="btn btn-primary" href="{{ route('dispatch.create') }}">
+                            <i class="fa fa-plus" aria-hidden="true"> </i> New Dispatch
                         </a>
 
                     </div>
@@ -49,58 +49,64 @@ WSRL | Manaage  Distributor
         <!-- Export Datatable start -->
         <div class="card-box mb-30">
             <div class="pd-20">
-                <h4 class="text-blue h4">All  Distributor List</h4>
+                <h4 class="text-blue h4">All  Dispatch List</h4>
             </div>
             <div class="pb-20">
                 <table class="table hover multiple-select-row data-table-export1 nowrap p-3">
                     <thead>
                         <tr>
                             <th>Sr. No.</th>
-                            <th>Unique Code</th>
-                            <th>Distributor POS</th>
-                            <th>Name</th>
-                            <th>Email Id</th>
-                            <th>Mobile Number</th>
-                            <th>Country</th>
+                            <th>Dispatch Code</th>
+                            <th>Distributor Name</th>
+                            <th>Product Name</th>
+                            <th>Dispatch Date</th>
                             <th>Status</th>
-                            @can('distributor-edit')
+                            @can('dispatch-edit')
                             <th class="no-export">Edit</th>
                             @endcan
-                            @can('distributor-delete')
+                            @can('dispatch-delete')
                             <th class="no-export">Delete</th>
                             @endcan
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($distributors as $key => $value)
+                        @foreach ($dispatches as $key => $value)
                         <tr>
                             <td class="text-wrap text-justify">{{ ++$key }}</td>
-                            <td class="text-wrap text-justify">{{ $value->distributor_code }}</td>
-                            <td class="text-wrap text-justify">{{ $value->distributor_pos }}</td>
-                            <td class="text-wrap text-justify">{{ $value->distributor_name }}</td>
-                            <td class="text-wrap text-justify">{{ $value->email }}</td>
-                            <td class="text-wrap text-justify">{{ $value->contact_person }}</td>
-                            <td class="text-wrap text-justify">{{ $value->country }}</td>
+                            <td class="text-wrap text-justify">{{ $value->dispatch_code }}</td>
                             <td class="text-wrap text-justify">
-                                @if ($value->status == 'active')
-                                <span class="badge badge-success">Active</span>
-                                @else
-                                <span class="badge badge-danger">In Active</span>
+                                {{ $value->distributor->distributor_name }}
+                            </td>
+                            <td class="text-wrap text-justify">
+                                {{ $value->product->name }}
+                            </td>
+                            <td class="text-wrap text-justify">
+                                {{ date('d-m-Y', strtotime($value->dispatched_at)) }}
+                            </td>
+                            <td class="text-wrap text-justify">
+                                @if ($value->dispatch_status == 'pending')
+                                <span class="badge badge-warning">Pending</span>
+                                @elseif ($value->dispatch_status == 'dispatched')
+                                <span class="badge badge-primary">Dispatched</span>
+                                @elseif ($value->dispatch_status == 'canceled')
+                                <span class="badge badge-danger">Canceled</span>
+                                @elseif ($value->dispatch_status == 'completed')
+                                <span class="badge badge-success">Completed</span>
                                 @endif
                             </td>
 
-                            @can('distributor-edit')
+                            @can('dispatch-edit')
                             <td class="no-export">
-                                <a href="{{ route('distributor.edit', $value->id) }}">
+                                <a href="{{ route('dispatch.edit', $value->id) }}">
                                     <button class="btn btn-warning btn-sm">
                                         <i class="micon dw dw-pencil-1"></i>
                                     </button>
                                 </a>
                             </td>
                             @endcan
-                            @can('distributor-delete')
+                            @can('dispatch-delete')
                             <td class="no-export">
-                                <form action="{{ route('distributor.destroy', $value->id) }}" method="post">
+                                <form action="{{ route('dispatch.destroy', $value->id) }}" method="post">
                                     @csrf
                                     @method('DELETE')
                                     <input name="_method" type="hidden" value="DELETE">
@@ -170,7 +176,7 @@ WSRL | Manaage  Distributor
                     columns: ':not(.no-export)',
                 },
                header: true,
-               title: 'All  Distributor List',
+               title: 'All  Dispatch List',
                orientation: 'landscape',
                pageSize: 'A4',
                customize: function(doc) {

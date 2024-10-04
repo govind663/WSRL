@@ -135,6 +135,14 @@ class QrCodeController extends Controller
 
             Product::where('id', $request->input('product_id'))->update($update);
 
+            // return view(
+            //     'qrcode.success'
+            // )->with([
+            //     'internalQRCodes' => $internalQRCodes,
+            //     'externalQRCodes' => $externalQRCodes,
+            //     'uniqueNumber' => $qrCode->unique_number,
+            //     'user' => $user
+            // ]);
             // Generate PDF with the QR codes
             $pdf = Pdf::loadView('qrcode.pdf', [
                 'internalQRCodes' => $internalQRCodes,
@@ -144,7 +152,8 @@ class QrCodeController extends Controller
             ]);
 
             // Return the PDF as a stream (opens in a new tab) and download
-            return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
+            $pdf->download($qrCode->unique_number . '_QR_codes.pdf');
+            // return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
 
         } catch (\Exception $ex) {
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());

@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DistributorController;
+use App\Http\Controllers\DispatchController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -63,5 +64,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
     // ===== Manage Distributor
     Route::resource('distributor', DistributorController::class);
+
+    // ===== Manage Dispatch Product
+    Route::resource('dispatch', DispatchController::class);
 
 });

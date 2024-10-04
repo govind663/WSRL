@@ -40,6 +40,16 @@ class PermissionTableSeeder extends Seeder
             'product-create',
             'product-edit',
             'product-delete',
+            // distributor
+            'distributor-list',
+            'distributor-create',
+            'distributor-edit',
+            'distributor-delete',
+            // dispatch
+            'dispatch-list',
+            'dispatch-create',
+            'dispatch-edit',
+            'dispatch-delete',
 
         ];
 
