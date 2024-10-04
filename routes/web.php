@@ -59,9 +59,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
     // ===== Manage QR Code
     Route::resource('qrcode', QrCodeController::class);
 
-    // ===== Show QR Code with encrypted
-    Route::get('/qr/{unique_number}', [QrCodeController::class, 'show'])->name('qr.show');
-
     // ===== fetch-avilable-quantity
     Route::post('fetch-avilable-quantity', [HomeController::class, 'fetchAvilableQuantity'])->name('qrcode.fetch-avilable-quantity');
 
@@ -72,3 +69,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
     Route::resource('dispatch', DispatchController::class);
 
 });
+
+
+// ===== Show QR Code with encrypted
+Route::get('/qr/{unique_number}', [QrCodeController::class, 'show'])->name('qr.show');
