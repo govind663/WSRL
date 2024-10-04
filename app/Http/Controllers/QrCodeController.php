@@ -69,7 +69,8 @@ class QrCodeController extends Controller
 
                 // Generate Internal QR Code (embed user information in the QR content)
                 $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->generate("
+                    ->generate(utf8_encode(
+                        "
                         Internal QR\n
                         User Detail : - \n
                         Name : $userName\n
@@ -79,21 +80,26 @@ class QrCodeController extends Controller
                         SKU : $producSKU\n
                         Name : $productName\n
                         Description : $productDescription\n
-                    ");
+                    "
+                    ));
 
                 // Generate External QR Code (embed user information in the QR content)
                 $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->generate("
-                        External QR\n
-                        User Detail : - \n
-                        Name : $userName\n
-                        Email : $userEmail\n
-                        UniqueID : $uniqueNumber\n
-                        Product Detail : - \n
-                        SKU : $producSKU\n
-                        Name : $productName\n
-                        Description : $productDescription\n
-                    ");
+                    ->generate(
+                        utf8_encode(
+                            "
+                                External QR\n
+                                User Detail : - \n
+                                Name : $userName\n
+                                Email : $userEmail\n
+                                UniqueID : $uniqueNumber\n
+                                Product Detail : - \n
+                                SKU : $producSKU\n
+                                Name : $productName\n
+                                Description : $productDescription\n
+                            "
+                        )
+                    );
 
                 // Append to internal and external QR code arrays
                 $internalQRCodes[] = [
@@ -152,8 +158,8 @@ class QrCodeController extends Controller
             ]);
 
             // Return the PDF as a stream (opens in a new tab) and download
-            $pdf->download($qrCode->unique_number . '_QR_codes.pdf');
-            // return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
+            // $pdf->download($qrCode->unique_number . '_QR_codes.pdf');
+            return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
 
         } catch (\Exception $ex) {
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());

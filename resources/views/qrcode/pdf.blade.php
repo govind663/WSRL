@@ -15,47 +15,59 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
         td {
             width: 50%;
             vertical-align: top;
             text-align: center;
+            padding: 10px;
         }
 
         .qr-code-container h1 {
-            font-size: 24px;
+            font-size: 18px;
+            text-align: left;
+            padding-left: 20px;
         }
 
-        /* Circular border for internal QR code only */
+        /* Circular border for internal QR code with blue border */
         .qr-code-wrapper {
-            padding-top: 10px;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding: 35px;
             display: inline-block;
-            width: 210px;
-            height: 210px;
-            border: 6px solid rgb(24, 24, 26); /* Blue circular border */
+            width: 150px;
+            height: 150px;
+            border: 6px solid #007bff; /* Blue circular border */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden; /* Ensure the image stays inside the circle */
         }
 
-        /* External image in square */
+        /* Square border for external QR code with green border */
         .qr-code-wrapper-external {
-            padding: 17px;
+            padding: 10px;
             display: inline-block;
-            width: 210px;
-            height: 210px;
+            width: 190px;
+            height: 190px;
+            border: 6px solid #28a745; /* Green square border */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
+        /* Ensure the QR code image fits the container properly */
         img {
-            width: 155px;
-            height: 160px;
+            width: 100%;
+            height: auto; /* Maintain the original aspect ratio of the QR code */
+        }
+
+        /* For images inside the circular QR container */
+        .qr-code-wrapper img {
+            width: auto;
+            height: 100%;
+            object-fit: contain; /* Ensure the image fits within the circle without reducing its size unnecessarily */
         }
 
         .page-break {
@@ -68,20 +80,18 @@
     @foreach ($internalQRCodes as $index => $internalQRCode)
     <table>
         <tr>
-
             <!-- Internal QR Code Section -->
             <td class="qr-code-container">
-                <p style="text-align: left !important; padding-left:20px !important;">Internal QR Code {{ $index + 1 }}</p>
-                <div class="col-sm-4 p-3 qr-code-wrapper">
-                    <br>
-                    <img src="data:image/png;base64, {!! base64_encode($internalQRCode['qr_code']) !!}" alt="Internal QR Code" width="50%" height="50%">
+                <h1>Internal QR Code {{ $index + 1 }}</h1>
+                <div class="qr-code-wrapper">
+                    <img src="data:image/png;base64, {!! base64_encode($internalQRCode['qr_code']) !!}" alt="Internal QR Code">
                 </div>
             </td>
 
             <!-- External QR Code Section -->
             <td class="qr-code-container">
-                <p style="text-align: left !important; padding-left:20px !important;">External QR Code {{ $index + 1 }}</p>
-                <div class="col-sm-4 p-3 qr-code-wrapper-external">
+                <h1>External QR Code {{ $index + 1 }}</h1>
+                <div class="qr-code-wrapper-external">
                     <img src="data:image/png;base64, {!! base64_encode($externalQRCodes[$index]['qr_code']) !!}" alt="External QR Code">
                 </div>
             </td>
