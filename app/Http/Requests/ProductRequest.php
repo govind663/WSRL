@@ -24,17 +24,13 @@ class ProductRequest extends FormRequest
         if ($this->id){
             $rule = [
                 'name' => 'required|string|min:2',
-                'description' => 'required|min:30',
-                'total_quantity' => 'required|numeric|min:0',
-                'price' => 'required|numeric|min:0',
+                'description' => 'required|min:2',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             ];
         }else{
             $rule = [
                 'name' => 'required|string|min:2',
                 'description' => 'required|min:30',
-                'total_quantity' => 'required|numeric|min:0',
-                'price' => 'required|numeric|min:0',
                 'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
             ];
         }
@@ -49,15 +45,7 @@ class ProductRequest extends FormRequest
             'name.min' => __('Product Name should not be less than 2 characters'),
 
             'description.required' => __('Description is required'),
-            'description.min' => __('Description should not be less than 30 characters'),
-
-            'total_quantity.required' => __('Total Quantity is required'),
-            'total_quantity.numeric' => __('Total Quantity should be a number'),
-            'total_quantity.min' => __('Total Quantity should not be less than 0'),
-
-            'price.required' => __('Price is required'),
-            'price.numeric' => __('Price should be a number'),
-            'price.min' => __('Price should not be less than 0'),
+            'description.min' => __('Description should not be less than 2 characters'),
 
             'image.required' => __('Product Image is required'),
             'image.image' => __('Product Image should be an image'),

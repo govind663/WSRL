@@ -59,8 +59,6 @@ WSRL | Manaage  Product
                             <th>SKU Code</th>
                             <th>Name</th>
                             <th>Image</th>
-                            <th>Avilable Quantity</th>
-                            <th>Price</th>
                             <th>Status</th>
                             @can('product-edit')
                             <th class="no-export">Edit</th>
@@ -81,8 +79,6 @@ WSRL | Manaage  Product
                                     <img src="{{url('/')}}/bhairaav/product/image/{{ $value->image }}" width="100px" height="100px" alt="{{ $value->image }}">
                                 @endif
                             </td>
-                            <td class="text-wrap text-justify">{{ $value->available_quantity }}</td>
-                            <td class="text-wrap text-justify">{{ $value->price }}</td>
                             <td class="text-wrap text-justify">
                                 @if ($value->in_stock == 1)
                                 <span class="badge badge-success">In Stock</span>

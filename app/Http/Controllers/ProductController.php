@@ -51,9 +51,6 @@ class ProductController extends Controller
 
             $product->name = $data['name'];
             $product->description = $data['description'];
-            $product->total_quantity = $data['total_quantity'];
-            $product->available_quantity = $product->total_quantity;
-            $product->price = $data['price'];
             $product->in_stock = 1;
             $product->inserted_at = Carbon::now();
             $product->inserted_by = Auth::user()->id;
@@ -122,9 +119,6 @@ class ProductController extends Controller
 
             $product->name = $data['name'];
             $product->description = $data['description'];
-            $product->total_quantity = $data['total_quantity'];
-            $product->available_quantity = $product->total_quantity;
-            $product->price = $data['price'];
             $product->in_stock = 1;
             $product->modified_at = Carbon::now();
             $product->modified_by = Auth::user()->id;

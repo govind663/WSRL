@@ -57,29 +57,8 @@ WSRL | Generate QR Code
                         @enderror
                     </div>
 
-                    <label class="col-sm-2"><b>Avilable Product Quantity : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
-                        <input readonly type="text" name="avilable_product_quantity" id="avilable_product_quantity" class="form-control @error('avilable_product_quantity') is-invalid @enderror" value="{{ old('avilable_product_quantity') }}">
-                        @error('avilable_product_quantity')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group row mt-3">
-                    <label class="col-sm-2"><b>Product Quantity : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
-                        <input type="text" name="current_product_quantity" id="current_product_quantity" class="form-control @error('current_product_quantity') is-invalid @enderror" value="{{ old('current_product_quantity') }}" placeholder="Enter Product Quantity.">
-                        @error('current_product_quantity')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
                     <label class="col-sm-2"><b>Quantity to Generate QR Codes : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
+                    <div class="col-sm-3 col-md-4">
                         <input type="text" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" placeholder="Enter Quantity to Generate QR Codes.">
                         @error('quantity')
                             <span class="invalid-feedback" role="alert">

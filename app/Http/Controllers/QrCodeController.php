@@ -56,50 +56,23 @@ class QrCodeController extends Controller
             $product = Product::find($request->input('product_id'));
             $producSKU = $product->sku;
             $productName = $product->name;
-            $productDescription = $product->description;
-            $productDescription = strip_tags($productDescription);
+            $productDescription = strip_tags($product->description);
 
             // Loop through the quantity and generate internal/external QR codes
             for ($i = 0; $i < $quantity; $i++) {
                 // Generate a unique number for each QR code
-                $uniqueNumber = uniqid();
+                $uniqueNumber = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 6);
 
                 // Define QR code size
                 $qrCodeSize = 300;
 
-                // Generate Internal QR Code (embed user information in the QR content)
-                $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->generate(utf8_encode(
-                        "
-                        Internal QR\n
-                        User Detail : - \n
-                        Name : $userName\n
-                        Email : $userEmail\n
-                        UniqueID : $uniqueNumber\n
-                        Product Detail : - \n
-                        SKU : $producSKU\n
-                        Name : $productName\n
-                        Description : $productDescription\n
-                    "
-                    ));
+                // Generate Internal QR Code URL
+                $internalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueNumber . '_internal']);
+                $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)->generate($internalQRCodeUrl);
 
-                // Generate External QR Code (embed user information in the QR content)
-                $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->generate(
-                        utf8_encode(
-                            "
-                                External QR\n
-                                User Detail : - \n
-                                Name : $userName\n
-                                Email : $userEmail\n
-                                UniqueID : $uniqueNumber\n
-                                Product Detail : - \n
-                                SKU : $producSKU\n
-                                Name : $productName\n
-                                Description : $productDescription\n
-                            "
-                        )
-                    );
+                // Generate External QR Code URL
+                $externalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueNumber . '_external']);
+                $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)->generate($externalQRCodeUrl);
 
                 // Append to internal and external QR code arrays
                 $internalQRCodes[] = [
@@ -129,26 +102,6 @@ class QrCodeController extends Controller
             $qrCode->inserted_by = $userId;
             $qrCode->save();
 
-            // ==== Update avilable quantity in product table based in product id
-            $actualAvailableQuantity = $request->input('avilable_product_quantity');
-            $currentQuantity = $request->input('current_product_quantity');
-            $newQuantity = $actualAvailableQuantity - $currentQuantity;
-            $update = [
-                'available_quantity' => $newQuantity,
-                'modified_at' => Carbon::now(),
-                'modified_by' => $userId
-            ];
-
-            Product::where('id', $request->input('product_id'))->update($update);
-
-            // return view(
-            //     'qrcode.success'
-            // )->with([
-            //     'internalQRCodes' => $internalQRCodes,
-            //     'externalQRCodes' => $externalQRCodes,
-            //     'uniqueNumber' => $qrCode->unique_number,
-            //     'user' => $user
-            // ]);
             // Generate PDF with the QR codes
             $pdf = Pdf::loadView('qrcode.pdf', [
                 'internalQRCodes' => $internalQRCodes,
@@ -157,8 +110,6 @@ class QrCodeController extends Controller
                 'user' => $user,
             ]);
 
-            // Return the PDF as a stream (opens in a new tab) and download
-            // $pdf->download($qrCode->unique_number . '_QR_codes.pdf');
             return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
 
         } catch (\Exception $ex) {
@@ -166,13 +117,22 @@ class QrCodeController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, $unique_number)
     {
-        //
+        // Retrieve the QR code record from the database
+        $qrCode = QrCode::where('unique_number', $unique_number)->first();
+
+        if (!$qrCode) {
+            return redirect()->back()->with('error', 'QR code not found.');
+        }
+
+        // Return a view with the details of the QR code
+        return view('qrcode.show', [
+            'qrCode' => $qrCode,
+        ]);
     }
 
     /**
