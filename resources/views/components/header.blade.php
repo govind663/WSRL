@@ -59,7 +59,7 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list p-2">
-                    <h6 class="dropdown-item-text text-justify">Hi, {{ Auth::user()->email }}!</h6>
+                    {{-- <h6 class="dropdown-item-text text-justify">Hi, {{ Auth::user()->email }}!</h6> --}}
 
                     {{-- <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
                     <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
