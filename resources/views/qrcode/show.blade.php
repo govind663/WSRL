@@ -1,62 +1,68 @@
-@extends('layouts.master')
+<!DOCTYPE html>
+<html>
 
-@section('title')
-Bhairaav | QR Code Details
-@endsection
+<head>
+    <!-- Basic Page Info -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-@push('styles')
-@endpush
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/assets/vendors/images/apple-touch-icon.png') }}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/assets/vendors/images/favicon-32x32.png') }}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/assets/vendors/images/favicon-16x16.png') }}" />
 
-@section('content')
-<div class="pd-ltr-20 xs-pd-20-10">
-    <div class="min-height-200px">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <div class="title">
-                        <h4>QR Code Details</h4>
-                    </div>
-                    <nav aria-label="breadcrumb" role="navigation">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('admin.dashboard') }}">Home</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('qrcode.index') }}">Manage Qr Code</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                QR Code Details
-                            </li>
-                        </ol>
-                    </nav>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/core.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/icon-font.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/style.css') }}" />
+
+</head>
+
+<body>
+    <div class="login-header box-shadow">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="brand-logo">
+                <a href="login.html">
+                    <img src="{{ asset('/assets/vendors/images/deskapp-logo.svg') }}" alt="" />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="login-wrap d-flex align-items-center flex-wrap justify-content-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="{{ asset('/assets/vendors/images/forgot-password.png') }}" alt="" />
                 </div>
-
+                <div class="col-md-6">
+                    <div class="login-box bg-white box-shadow border-radius-10">
+                        <div class="login-title">
+                            <h2 class="text-center text-primary">QR Code Details</h2>
+                        </div>
+                        <!-- QR Code Details Section -->
+                        <div class="pb-20">
+                            <p><strong>Unique Number:</strong> {{ $qrCode->unique_number }}</p>
+                            <p><strong>User ID:</strong> {{ $qrCode->user_id }}</p>
+                            <p><strong>Quantity:</strong> {{ $qrCode->quantity }}</p>
+                            <p><strong>Product ID:</strong> {{ $qrCode->product_id }}</p>
+                            <p><strong>Internal QR Code Count:</strong> {{ $qrCode->internal_qr_code_count }}</p>
+                            <p><strong>External QR Code Count:</strong> {{ $qrCode->external_qr_code_count }}</p>
+                            <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
+                            <p><strong>Inserted By:</strong> {{ $qrCode->inserted_by }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="card-box mb-30">
-            <div class="pd-20">
-                <h4 class="text-blue h4">QR Code Details</h4>
-            </div>
-            <div class="pb-20">
-                <p><strong>Unique Number:</strong> {{ $qrCode->unique_number }}</p>
-                <p><strong>User ID:</strong> {{ $qrCode->user_id }}</p>
-                <p><strong>Quantity:</strong> {{ $qrCode->quantity }}</p>
-                <p><strong>Product ID:</strong> {{ $qrCode->product_id }}</p>
-                <p><strong>Internal QR Code Count:</strong> {{ $qrCode->internal_qr_code_count }}</p>
-                <p><strong>External QR Code Count:</strong> {{ $qrCode->external_qr_code_count }}</p>
-                <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
-                <p><strong>Inserted By:</strong> {{ $qrCode->inserted_by }}</p>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Footer Start -->
-    <x-footer />
-    <!-- Footer Start -->
-</div>
-@endsection
+    <!-- js -->
+    <script src="{{ asset('assets/vendors/scripts/core.js') }}"></script>
+    <script src="{{ asset('assets/vendors/scripts/script.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/scripts/process.js') }}"></script>
+    <script src="{{ asset('asset/vendors/scripts/layout-settings.js') }}"></script>
+</body>
 
-@push('scripts')
-@endpush
+</html>
