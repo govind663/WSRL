@@ -18,21 +18,18 @@ use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DistributorController;
 use App\Http\Controllers\DispatchController;
-use App\Http\Controllers\QrCodedetatilsController;
-
 
 Route::get('/', function () {
     return view('auth.login');
 })->name('/');
 
-Auth::routes();
+// Auth::routes();
 
 // ===== Admin Register
 Route::get('register', [RegisterController::class,'register'])->name('admin.register');
 Route::post('register/store', [RegisterController::class,'store'])->name('admin.register.store');
 
 // ===== Admin Login/Logout
-Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::get('login', [LoginController::class, 'login'])->name('admin.login');
 Route::post('login/store', [LoginController::class, 'authenticate'])->name('admin.login.store');
 Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
@@ -74,6 +71,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 });
 
 
-// ===== Show QR Code Details show controller
-Route::get('/qr/{unique_number}', [QrCodedetatilsController::class, 'show'])->name('qr.show');
-
+// ===== Show QR Code with encrypted
+Route::get('/qr/{unique_number}', [QrCodeController::class, 'show'])->name('qr.show')->middleware('guest');
