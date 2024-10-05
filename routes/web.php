@@ -73,3 +73,4 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
 // ===== Show QR Code with encrypted
 Route::get('/qr/{unique_number}', [QrCodeController::class, 'show'])->name('qr.show');
+
