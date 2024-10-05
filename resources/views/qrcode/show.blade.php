@@ -13,6 +13,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/assets/vendors/images/favicon-32x32.png') }}" />
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/assets/vendors/images/favicon-16x16.png') }}" />
 
+    <!-- Title -->
+    <title>QR Code Details</title>
+
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/core.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/icon-font.min.css') }}" />
