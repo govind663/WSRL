@@ -59,33 +59,35 @@ class QrCodeController extends Controller
             // Loop through the quantity and generate internal/external QR codes
             for ($i = 0; $i < $quantity; $i++) {
                 // Generate a random 2-digit number to create a 10-digit serial number
-                $randomNumber = str_pad(mt_rand(0, 99), 2, '0', STR_PAD_LEFT);
+                $randomNumberInternal = str_pad(mt_rand(0, 99), 2, '0', STR_PAD_LEFT);
+                $randomNumberExternal = str_pad(mt_rand(0, 99), 2, '0', STR_PAD_LEFT);
 
                 // Combine the date and the random number to get a 10-digit serial number
-                $uniqueNumber = $date . $randomNumber ; // 8 characters for date + 2 random digits
+                $uniqueInternalNumber = $date . $randomNumberInternal; // 8 characters for date + 2 random digits
+                $uniqueExternalNumber = $date . $randomNumberExternal; // 8 characters for date + 2 random digits
 
                 // Define QR code size
                 $qrCodeSize = 300;
 
                 // Generate Internal QR Code URL
-                $internalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueNumber]);
+                $internalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueInternalNumber]);
                 $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)->generate($internalQRCodeUrl);
 
                 // Generate External QR Code URL
-                $externalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueNumber]);
+                $externalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueExternalNumber]);
                 $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)->generate($externalQRCodeUrl);
 
                 // Append to internal and external QR code arrays
                 $internalQRCodes[] = [
                     'qr_code' => $internalQRCodeContent,
-                    'unique_number' => $uniqueNumber,
+                    'unique_number' => $uniqueInternalNumber,
                     'status' => 'active',
                     'printed_date' => Carbon::now()->toDateString() // Add the printed date
                 ];
 
                 $externalQRCodes[] = [
                     'qr_code' => $externalQRCodeContent,
-                    'unique_number' => $uniqueNumber,
+                    'unique_number' => $uniqueExternalNumber,
                     'status' => 'active',
                     'printed_date' => Carbon::now()->toDateString() // Add the printed date
                 ];
