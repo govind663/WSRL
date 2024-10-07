@@ -111,8 +111,8 @@ class QrCodeController extends Controller
 
             // Generate PDF with the QR codes
             $pdf = Pdf::loadView('qrcode.pdf', [
-                'internalQRCodes' => $internalQRCodes,
-                'externalQRCodes' => $externalQRCodes,
+                'internalQRCodes' => $uniqueInternalNumber,
+                'externalQRCodes' => $uniqueExternalNumber,
                 'uniqueNumber' => $qrCode->unique_number,
                 'user' => $user,
             ]);
