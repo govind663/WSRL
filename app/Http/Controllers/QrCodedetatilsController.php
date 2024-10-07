@@ -16,9 +16,9 @@ class QrCodedetatilsController extends Controller
             ->first();
 
         // Check if QR code exists
-        // if (!$qrCode) {
-        //     return redirect()->back()->with('error', 'QR code not found.');
-        // }
+        if (!$qrCode) {
+            return redirect()->back()->with('error', 'QR code not found.');
+        }
 
         // Convert the JSON fields back into arrays for easier access
         $internalQrCodes = json_decode($qrCode->internal_qr_code, true);
@@ -28,15 +28,28 @@ class QrCodedetatilsController extends Controller
         $isInternal = in_array($unique_number, $internalQrCodes);
         $isExternal = in_array($unique_number, $externalQrCodes);
 
-        // Return a view with the details of the QR code
-        return view('qrcode.show', [
-            'qrCode' => $qrCode,
-            'isInternal' => $isInternal,
-            'isExternal' => $isExternal,
-            'internalQrCodes' => $internalQrCodes,
-            'externalQrCodes' => $externalQrCodes,
-            'scannedNumber' => $unique_number
-        ]);
+        // Return appropriate view based on the QR code type
+        if ($isInternal) {
+            return view('qrcode.mobile_verification', [
+                'qrCode' => $qrCode,
+                'isInternal' => true,
+                'isExternal' => false,
+                'internalQrCodes' => $internalQrCodes,
+                'externalQrCodes' => $externalQrCodes,
+                'scannedNumber' => $unique_number
+            ]);
+        } elseif ($isExternal) {
+            return view('qrcode.show', [
+                'qrCode' => $qrCode,
+                'isInternal' => false,
+                'isExternal' => true,
+                'internalQrCodes' => $internalQrCodes,
+                'externalQrCodes' => $externalQrCodes,
+                'scannedNumber' => $unique_number
+            ]);
+        } else {
+            return redirect()->back()->with('error', 'QR code type not recognized.');
+        }
     }
 
 
