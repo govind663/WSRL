@@ -95,7 +95,7 @@
 
 <div class="left-side-bar">
     <div class="brand-logo">
-        <a href="index.html">
+        <a href="{{ route('admin.dashboard') }}">
             <img src="{{ asset('assets/vendors/images/deskapp-logo.svg') }}" alt="" class="dark-logo" />
             <img src="{{ asset('assets/vendors/images/deskapp-logo-white.svg') }}" alt="" class="light-logo" />
         </a>
@@ -163,6 +163,7 @@
                     <a href="{{ route('dispatch.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'dispatch.index') || ($currentRoute === 'dispatch.create') || ($currentRoute === 'dispatch.edit') ? 'active' : '' }}">
                         <span class="micon bi bi-truck"></span>
                         <span class="mtext">Manage Dispatch</span>
+                    </a>
                 </li>
                 @endcan
 
