@@ -28,6 +28,7 @@ class DispatchRequest extends FormRequest
                 'product_id' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric',
                 'remarks' => 'required|string',
+                'external_qr_code_serial_number.*' => 'required|string',
                 'dispatched_at' => 'required',
             ];
         }else{
@@ -37,6 +38,7 @@ class DispatchRequest extends FormRequest
                 'product_id' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric',
                 'remarks' => 'required|string',
+                'external_qr_code_serial_number.*' => 'required|string',
                 'dispatched_at' => 'required',
             ];
         }
@@ -61,6 +63,9 @@ class DispatchRequest extends FormRequest
 
             'remarks.required' => __('Remarks is required'),
             'remarks.string' => __('Remarks should be a string'),
+
+            'external_qr_code_serial_number.*.required' => __('External QR Code Serial Number is required'),
+            'external_qr_code_serial_number.*.string' => __('External QR Code Serial Number should be a string'),
 
             'dispatched_at.required' => __('Dispatched Date is required'),
 

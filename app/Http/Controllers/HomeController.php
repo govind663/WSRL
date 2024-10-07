@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\QrCode;
 
 class HomeController extends Controller
 {
@@ -19,11 +20,33 @@ class HomeController extends Controller
 
     public function fetchAvilableQuantity(Request $request)
     {
-        // reqest product_id
+        // Get the product_id from the request
         $productId = $request->productId;
 
-        // fetch avilable quantity in Product Table
-        $avilableQuantity = Product::where('id', $productId)->first()->pluck('available_quantity');
-        return response()->json(['available_quantity' => $avilableQuantity]);
+        // Fetch QR codes for the given product
+        $qrCodes = QrCode::where('product_id', $productId)->get();
+
+        // Prepare arrays for internal and external QR codes
+        $internalQrCodes = [];
+        $externalQrCodes = [];
+
+        foreach ($qrCodes as $qrCode) {
+            // Decode JSON data
+            $internalCodes = json_decode($qrCode->internal_qr_code, true);
+            $externalCodes = json_decode($qrCode->external_qr_code, true);
+
+            // Merge into arrays
+            if (is_array($internalCodes)) {
+                $internalQrCodes = array_merge($internalQrCodes, $internalCodes);
+            }
+            if (is_array($externalCodes)) {
+                $externalQrCodes = array_merge($externalQrCodes, $externalCodes);
+            }
+        }
+
+        return response()->json([
+            'available_quantity' => count($internalQrCodes), // Count of internal QR codes
+            'external_qr_codes' => $externalQrCodes, // Include the external QR codes in the response
+        ]);
     }
 }

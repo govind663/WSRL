@@ -110,6 +110,26 @@ Bhairaav | Edit Dispatch
                             </span>
                         @enderror
                     </div>
+
+                    <label class="col-sm-2"><b>External QrCode Serial Number : <span class="text-danger">*</span></b></label>
+                    <div class="col-sm-4 col-md-4">
+                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
+                            <optgroup label="External QrCode Serial Number">
+                                @foreach ($externalQrCodes as $qrCode)
+                                    <option value="{{ $qrCode }}"
+                                    {{ is_array(json_decode($dispatch->external_qr_code_serial_number, true)) && in_array($qrCode, json_decode($dispatch->external_qr_code_serial_number, true)) ? 'selected' : '' }}>
+                                        {{ $qrCode }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        </select>
+                        @error('external_qr_code_serial_number')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
                 </div>
 
                 <div class="form-group row mt-3">
@@ -145,4 +165,49 @@ Bhairaav | Edit Dispatch
 @endsection
 
 @push('scripts')
+<script>
+    $(document).ready(function () {
+        // Variable to store the previously selected value
+        var previousValues = @json($externalQrCodes); // Get the previously selected QR codes from the server
+
+        $('#product_id').on('change', function () {
+            var product_id = this.value;
+            $("#external_qr_code_serial_number").html(''); // Clear the dropdown
+
+            $.ajax({
+                url: "{{ route('qrcode.fetch-avilable-quantity') }}",
+                type: "POST",
+                data: {
+                    productId: product_id,
+                    _token: '{{ csrf_token() }}',
+                },
+                dataType: 'json',
+                success: function (result) {
+                    // Set the available quantity
+                    $("#avilable_product_quantity").val(result.available_quantity);
+
+                    // Populate the external QR code dropdown
+                    if (result.external_qr_codes.length > 0) {
+                        $.each(result.external_qr_codes, function(index, value) {
+                            $("#external_qr_code_serial_number").append(
+                                '<option value="' + value + '">' + value + '</option>'
+                            );
+                        });
+                    } else {
+                        $("#external_qr_code_serial_number").append(
+                            '<option value="">No External QR Codes Available</option>'
+                        );
+                    }
+
+                    // Re-select the previous values if they still exist
+                    $("#external_qr_code_serial_number").val(previousValues);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching available quantity:", error);
+                }
+            });
+        });
+    });
+</script>
+
 @endpush

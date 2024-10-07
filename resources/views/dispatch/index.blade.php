@@ -60,6 +60,7 @@ WSRL | Manaage  Dispatch
                             <th>Distributor Name</th>
                             <th>Product Name</th>
                             <th>Dispatch Date</th>
+                            <th>External QrCode Serial No.</th>
                             <th>Status</th>
                             @can('dispatch-edit')
                             <th class="no-export">Edit</th>
@@ -83,6 +84,22 @@ WSRL | Manaage  Dispatch
                             <td class="text-wrap text-justify">
                                 {{ date('d-m-Y', strtotime($value->dispatched_at)) }}
                             </td>
+
+                            <td class="text-wrap text-justify">
+                                {{-- Display the external QR codes in badge format --}}
+                                @php
+                                    $externalQrCodes = json_decode($value->external_qr_code_serial_number, true);
+                                @endphp
+
+                                @if(is_array($externalQrCodes) && count($externalQrCodes) > 0)
+                                    @foreach ($externalQrCodes as $qrCode)
+                                        <span class="badge badge-success">{{ $qrCode }}</span>
+                                    @endforeach
+                                @else
+                                    <span>No External QR Codes</span>
+                                @endif
+                            </td>
+
                             <td class="text-wrap text-justify">
                                 @if ($value->dispatch_status == 'pending')
                                 <span class="badge badge-warning">Pending</span>
