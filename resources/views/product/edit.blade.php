@@ -53,7 +53,7 @@ Bhairaav | Edit Product
                         @enderror
                     </div>
 
-                    <label class="col-sm-2"><b>Upload Image : <span class="text-danger">*</span></b></label>
+                    <label class="col-sm-2"><b>Upload Image : </b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="file" onchange="agentPreviewFile()" accept=".png, .jpg, .jpeg" name="image" id="image" class="form-control @error('image') is-invalid @enderror" value="{{ $product->image }}">
                         <small class="text-secondary"><b>Note : The file size  should be less than 2MB .</b></small>
