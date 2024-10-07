@@ -69,7 +69,7 @@
 
                             <!-- Displaying related product details -->
                             <p><strong>Product Name:</strong> {{ $qrCode->product->name ?? 'N/A' }}</p>
-                            <p><strong>Product Description:</strong> {{ $qrCode->product->description ?? 'N/A' }}</p>
+                            <p><strong>Product Description:</strong> {!! $qrCode->product->description ?? 'N/A' !!}</p>
 
                             <!-- Displaying related user details -->
                             <p><strong>User Name:</strong> {{ $qrCode->user->name ?? 'N/A' }}</p>

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\AllowQrAccess;
 use App\Http\Middleware\PreventBackHistoryMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -35,11 +34,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class
         ]);
-
-        // === AllowQrAccess
-        // $middleware->alias([
-        //     'allow.qr.access' => AllowQrAccess::class
-        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
