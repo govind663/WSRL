@@ -49,7 +49,7 @@
                             <p><strong>Unique Number:</strong> {{ $qrCode->unique_number }}</p>
 
                             <!-- Displaying QR code type and scanned number -->
-                            @if ($isInternal)
+                            @if ($isInternal )
                                 <p><strong>Type:</strong> Internal</p>
                                 <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
                             @elseif ($isExternal)
