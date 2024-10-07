@@ -82,7 +82,7 @@
         <tr>
             <!-- Internal QR Code Section -->
             <td class="qr-code-container">
-                <h1>Internal QR Code</h1>
+                {{-- <h1>Internal QR Code</h1> --}}
                 <div class="qr-code-wrapper">
                     <img src="data:image/png;base64, {!! base64_encode($internalQRCode['qr_code']) !!}" alt="Internal QR Code">
                 </div>
@@ -91,7 +91,7 @@
 
             <!-- External QR Code Section -->
             <td class="qr-code-container">
-                <h1>External QR Code</h1>
+                {{-- <h1>External QR Code</h1> --}}
                 <div class="qr-code-wrapper-external">
                     <img src="data:image/png;base64, {!! base64_encode($externalQRCodes[$index]['qr_code']) !!}" alt="External QR Code">
                 </div>
