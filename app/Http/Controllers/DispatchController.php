@@ -53,6 +53,7 @@ class DispatchController extends Controller
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;
             $dispatch->quantity = $request->quantity;
+            $dispatch->external_qr_code_serial_number = json_encode($request->external_qr_code_serial_number);
             $dispatch->remarks = $request->remarks;
             $dispatch->dispatched_at = date('Y-m-d H:i:s', strtotime($request->dispatched_at));
             $dispatch->inserted_at = Carbon::now();
@@ -87,10 +88,15 @@ class DispatchController extends Controller
 
         // ===== Fetch Product
         $products = Product::whereNull('deleted_at')->orderBy('id', 'asc')->get(['id', 'name']);
+
+        // Decode the existing external QR codes if they exist
+        $externalQrCodes = json_decode($dispatch->external_qr_code_serial_number, true) ?? [];
+
         return view('dispatch.edit', [
             'dispatch' => $dispatch,
             'distributors' => $distributors,
-            'products' => $products
+            'products' => $products,
+            'externalQrCodes' => $externalQrCodes
         ]);
     }
 
@@ -109,6 +115,7 @@ class DispatchController extends Controller
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;
             $dispatch->quantity = $request->quantity;
+            $dispatch->external_qr_code_serial_number = json_encode($request->external_qr_code_serial_number);
             $dispatch->remarks = $request->remarks;
             $dispatch->dispatched_at = date('Y-m-d H:i:s', strtotime($request->dispatched_at));
             $dispatch->modified_at = Carbon::now();

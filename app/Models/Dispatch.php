@@ -23,6 +23,7 @@ class Dispatch extends Model
         'distributor_id',
         'product_id',
         'quantity',
+        'external_qr_code_serial_number',
         'remarks',
         'externally_qr_code_mapping',
         'dispatched_at',
