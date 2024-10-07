@@ -54,7 +54,16 @@
                             <p><strong>External QR Code Count:</strong> {{ $qrCode->external_qr_code_count }}</p>
                             <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
                             <p><strong>Inserted By:</strong> {{ $qrCode->inserted_by }}</p>
+
+                            <!-- Displaying related product details -->
+                            <p><strong>Product Name:</strong> {{ $qrCode->product->name ?? 'N/A' }}</p>
+                            <p><strong>Product Description:</strong> {{ $qrCode->product->description ?? 'N/A' }}</p>
+
+                            <!-- Displaying related user details -->
+                            <p><strong>User Name:</strong> {{ $qrCode->user->name ?? 'N/A' }}</p>
+                            <p><strong>User Email:</strong> {{ $qrCode->user->email ?? 'N/A' }}</p>
                         </div>
+
                     </div>
                 </div>
             </div>

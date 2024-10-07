@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class AllowQrAccess
 {
@@ -15,11 +16,17 @@ class AllowQrAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Allow access for the QR code show route without authentication
+        // Allow access if the user is trying to access the QR code show route
         if ($request->routeIs('qr.show')) {
-            return $next($request); // Proceed without authentication check
+            return $next($request);
+        }
+
+        // For all other routes, check if the user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('admin.login'); // Redirect to login if not authenticated
         }
 
         return $next($request);
     }
 }
+
