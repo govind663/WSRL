@@ -47,13 +47,25 @@
                         <!-- QR Code Details Section -->
                         <div class="pb-20">
                             <p><strong>Unique Number:</strong> {{ $qrCode->unique_number }}</p>
-                            <p><strong>User ID:</strong> {{ $qrCode->user_id }}</p>
+
+                            <!-- Displaying QR code type and scanned number -->
+                            @if ($isInternal)
+                                <p><strong>Type:</strong> Internal</p>
+                                <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
+                            @elseif ($isExternal)
+                                <p><strong>Type:</strong> External</p>
+                                <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
+                            @else
+                                <p><strong>Type:</strong> Not Found</p>
+                            @endif
+
+                            {{-- <p><strong>User ID:</strong> {{ $qrCode->user_id }}</p>
                             <p><strong>Quantity:</strong> {{ $qrCode->quantity }}</p>
                             <p><strong>Product ID:</strong> {{ $qrCode->product_id }}</p>
                             <p><strong>Internal QR Code Count:</strong> {{ $qrCode->internal_qr_code_count }}</p>
-                            <p><strong>External QR Code Count:</strong> {{ $qrCode->external_qr_code_count }}</p>
-                            <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
-                            <p><strong>Inserted By:</strong> {{ $qrCode->inserted_by }}</p>
+                            <p><strong>External QR Code Count:</strong> {{ $qrCode->external_qr_code_count }}</p> --}}
+
+                            {{-- <p><strong>Inserted By:</strong> {{ $qrCode->inserted_by }}</p> --}}
 
                             <!-- Displaying related product details -->
                             <p><strong>Product Name:</strong> {{ $qrCode->product->name ?? 'N/A' }}</p>
@@ -62,6 +74,8 @@
                             <!-- Displaying related user details -->
                             <p><strong>User Name:</strong> {{ $qrCode->user->name ?? 'N/A' }}</p>
                             <p><strong>User Email:</strong> {{ $qrCode->user->email ?? 'N/A' }}</p>
+
+                            <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
                         </div>
 
                     </div>
