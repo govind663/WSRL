@@ -113,23 +113,23 @@
                     </a>
                 </li>
 
-                @can('role-list')
+                {{-- @can('role-list') --}}
                 <li>
                     <a href="{{ route('roles.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'roles.index') || ($currentRoute === 'roles.create') || ($currentRoute === 'roles.edit') ? 'active' : '' }}">
                         <span class="micon bi bi-diagram-3"></span>
                         <span class="mtext">Manage Role</span>
                     </a>
                 </li>
-                @endcan
+                {{-- @endcan --}}
 
-                @can('user-list')
+                {{-- @can('user-list') --}}
                 <li>
                     <a href="{{ route('users.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'users.index') || ($currentRoute === 'users.create') || ($currentRoute === 'users.edit') ? 'active' : '' }}">
                         <span class="micon bi bi-person"></span>
                         <span class="mtext">Manage User</span>
                     </a>
                 </li>
-                @endcan
+                {{-- @endcan --}}
 
                 @can('product-list')
                 <li>

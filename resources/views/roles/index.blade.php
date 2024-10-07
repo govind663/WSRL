@@ -33,7 +33,7 @@ WSRL | Manaage  Role
                     </nav>
                 </div>
 
-                @can('role-create')
+                {{-- @can('role-create') --}}
                     <div class="col-md-6 col-sm-12 text-right">
                         <div class="dropdown">
                             <a class="btn btn-primary" href="{{ route('roles.create') }}">
@@ -41,7 +41,7 @@ WSRL | Manaage  Role
                             </a>
                         </div>
                     </div>
-                @endcan
+                {{-- @endcan --}}
             </div>
         </div>
 
@@ -69,7 +69,7 @@ WSRL | Manaage  Role
                         <tr>
                             <td>{{ ++$key }}</td>
                             <td>{{ $role->name }}</td>
-                            @can('role-edit')
+                            {{-- @can('role-edit') --}}
                                 <td class="no-export">
                                     <a href="{{ route('roles.edit', $role->id) }}">
                                         <button class="btn btn-warning btn-sm">
@@ -77,8 +77,8 @@ WSRL | Manaage  Role
                                         </button>
                                     </a>
                                 </td>
-                            @endcan
-                            @can('role-delete')
+                            {{-- @endcan --}}
+                            {{-- @can('role-delete') --}}
                                 <td class="no-export">
                                     <form action="{{ route('roles.destroy', $role->id) }}" method="post">
                                         @csrf
@@ -89,7 +89,7 @@ WSRL | Manaage  Role
                                         </button>
                                     </form>
                                 </td>
-                            @endcan
+                            {{-- @endcan --}}
                         </tr>
                         @endforeach
                     </tbody>
