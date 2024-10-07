@@ -26,7 +26,6 @@ class QrCodedetatilsController extends Controller
 
         // Determine if the scanned number is internal or external
         $isInternal = in_array($unique_number, $internalQrCodes);
-        dd($isInternal);
         $isExternal = in_array($unique_number, $externalQrCodes);
 
         // Return a view with the details of the QR code
