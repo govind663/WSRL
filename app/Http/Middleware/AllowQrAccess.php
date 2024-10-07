@@ -16,9 +16,8 @@ class AllowQrAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Allow access if the user is not authenticated
-        // and is trying to access a QR code
-        if ($request->is('qr/show/*')) {
+        // Allow access if the user is trying to access the QR code show route
+        if ($request->routeIs('qr.show')) {
             return $next($request);
         }
 
