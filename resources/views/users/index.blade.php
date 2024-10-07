@@ -33,7 +33,7 @@ WSRL | Manaage  User
                     </nav>
                 </div>
 
-                {{-- @can('user-create') --}}
+                @can('user-create')
                 <div class="col-md-6 col-sm-12 text-right">
                     <div class="dropdown">
                         <a class="btn btn-primary" href="{{ route('users.create') }}">
@@ -42,7 +42,7 @@ WSRL | Manaage  User
 
                     </div>
                 </div>
-                {{-- @endcan --}}
+                @endcan
             </div>
         </div>
 
@@ -87,7 +87,7 @@ WSRL | Manaage  User
                                 <label class="badge bg-danger text-light">No Role</label>
                                 @endif
                             </td>
-                            {{-- @can('user-edit') --}}
+                            @can('user-edit')
                             <td class="no-export">
                                 <a href="{{ route('users.edit', $user->id) }}">
                                     <button class="btn btn-warning btn-sm">
@@ -95,8 +95,8 @@ WSRL | Manaage  User
                                     </button>
                                 </a>
                             </td>
-                            {{-- @endcan --}}
-                            {{-- @can('user-delete') --}}
+                            @endcan
+                            @can('user-delete')
                             <td class="no-export">
                                 <form action="{{ route('users.destroy', $user->id) }}" method="post">
                                     @csrf
@@ -107,7 +107,7 @@ WSRL | Manaage  User
                                     </button>
                                 </form>
                             </td>
-                            {{-- @endcan --}}
+                            @endcan
                         </tr>
                         @endforeach
                     </tbody>
