@@ -50,7 +50,7 @@
                         <form method="POST" action="#" aria-label="{{ __('Mobile Verification') }}" enctype="multipart/form">
                             @csrf
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" placeholder="Email" />
+                                <input type="text" class="form-control form-control-lg" placeholder="Enter Mobile Number" />
                                 <div class="input-group-append custom">
                                     <span class="input-group-text">
                                         <i class="fa fa-mobile-phone" aria-hidden="true"></i>
