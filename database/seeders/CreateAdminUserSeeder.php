@@ -19,8 +19,8 @@ class CreateAdminUserSeeder extends Seeder
     {
         // Create the admin user
         $user = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+            'name' => 'Package Department',
+            'email' => 'package_department@gmail.com',
             'department_id' => '1',
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('1234567890'),
@@ -57,14 +57,17 @@ class CreateAdminUserSeeder extends Seeder
 
         // Optionally, you can create a normal user with the User role (example)
         $normalUser = User::create([
-            'name' => 'Abhishek G Jha',
-            'email' => 'codingthunder1997@gmail.com',
+            'name' => 'Dispatch Department',
+            'email' => 'dispatch_department@gmail.com',
             'department_id' => '2',
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('1234567890'),
             'created_by' => 1,
             'created_at' => Carbon::now(),
         ]);
+
+        // Sync all permissions to the User role
+        $userRole->syncPermissions($permissions);
 
         // Assign the User role to the normal user
         $normalUser->assignRole($userRole);

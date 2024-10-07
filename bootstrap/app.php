@@ -37,9 +37,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // === AllowQrAccess
-        $middleware->alias([
-            'allow.qr.access' => AllowQrAccess::class
-        ]);
+        // $middleware->alias([
+        //     'allow.qr.access' => AllowQrAccess::class
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

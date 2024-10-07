@@ -38,42 +38,40 @@ class ProductController extends Controller
             $product = new Product();
 
             // ==== Upload (image)
-            if (!empty($request->hasFile('image'))) {
+            if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $image_name = $image->getClientOriginalName();
                 $extension = $image->getClientOriginalExtension();
                 $new_name = time() . rand(10, 999) . '.' . $extension;
                 $image->move(public_path('/bhairaav/product/image'), $new_name);
 
-                $image_path = "/bhairaav/product/image" . $new_name;
+                $image_path = "/bhairaav/product/image/" . $new_name; // Fixed missing slash
                 $product->image = $new_name;
             }
 
-            $product->name = $data['name'];
-            $product->description = $data['description'];
+            $product->name = $request->name ?? '';
+            $product->description = $request->description ?? '';
             $product->in_stock = 1;
             $product->inserted_at = Carbon::now();
             $product->inserted_by = Auth::user()->id;
             $product->save();
 
-            // ==== generate sku with PRD_ , Date or auto increment number six digit number 0000001
+            // ==== Generate SKU
             $product->sku = 'PRD_' . str_pad($product->id, 6, '0', STR_PAD_LEFT);
 
-            // ==== generate unique_no with PRD_ , radon generate six digit numder also serial number also
+            // ==== Generate unique_no
             $product->unique_no = 'PRD_' . date('Y') . date('m') . date('d') . rand(100000, 999999) . $product->id;
-            // ==== Update sku and unique_no
-            $update = [
+
+            // ==== Update SKU and unique_no
+            Product::where('id', $product->id)->update([
                 'sku' => $product->sku,
-                'unique_number' => $product->unique_no
-            ];
+                'unique_number' => $product->unique_no,
+            ]);
 
-            Product::where('id', $product->id)->update($update);
+            return redirect()->route('products.index')->with('message', 'Your record has been successfully created.');
 
-            return redirect()->route('products.index')->with('message','Your record has been successfully created.');
-
-        } catch(\Exception $ex){
-
-            return redirect()->back()->with('error','Something Went Wrong  - '.$ex->getMessage());
+        } catch(\Exception $ex) {
+            return redirect()->back()->with('error', 'Something Went Wrong - ' . $ex->getMessage());
         }
     }
 
@@ -117,8 +115,8 @@ class ProductController extends Controller
                 $product->image = $new_name;
             }
 
-            $product->name = $data['name'];
-            $product->description = $data['description'];
+            $product->name = $request->name ?? '';
+            $product->description = $request->description ?? '';
             $product->in_stock = 1;
             $product->modified_at = Carbon::now();
             $product->modified_by = Auth::user()->id;

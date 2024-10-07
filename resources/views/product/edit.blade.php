@@ -79,7 +79,7 @@ Bhairaav | Edit Product
                 <div class="form-group row mt-3">
                     <label class="col-sm-4"><b>Description : </b></label>
                     <div class="col-sm-12 col-md-12">
-                        <textarea type="text" name="description" id="description" class="textarea_editor form-control @error('description') is-invalid @enderror" value="{{ $product->description }}" placeholder="Enter Description.">{!! $product->description !!}</textarea>
+                        <textarea type="text" name="description" id="description" class="textarea_editor form-control @error('description') is-invalid @enderror" value="{!! $product->description !!}" placeholder="Enter Description.">{!! $product->description !!}</textarea>
                         @error('description')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
