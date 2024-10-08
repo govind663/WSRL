@@ -56,7 +56,7 @@ WSRL | Manaage  Dispatch
                     <thead>
                         <tr>
                             <th>Sr. No.</th>
-                            <th>Dispatch Code</th>
+                            {{-- <th>Dispatch Code</th> --}}
                             <th>Distributor Name</th>
                             <th>Product Name</th>
                             <th>Dispatch Date</th>
@@ -73,7 +73,7 @@ WSRL | Manaage  Dispatch
                         @foreach ($dispatches as $key => $value)
                         <tr>
                             <td class="text-wrap text-justify">{{ ++$key }}</td>
-                            <td class="text-wrap text-justify">{{ $value->dispatch_code }}</td>
+                            {{-- <td class="text-wrap text-justify">{{ $value->dispatch_code }}</td> --}}
                             <td class="text-wrap text-justify">
                                 {{ $value->distributor->distributor_name }}
                             </td>

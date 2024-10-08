@@ -48,7 +48,6 @@ class DispatchController extends Controller
 
             $dispatch = new Dispatch();
 
-            $dispatch->dispatch_code = $request->dispatch_code;
             $dispatch->user_id = Auth::user()->id;
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;
@@ -59,6 +58,13 @@ class DispatchController extends Controller
             $dispatch->inserted_at = Carbon::now();
             $dispatch->inserted_by = Auth::user()->id;
             $dispatch->save();
+
+            // === generate dispatch code include (year, 6-digit serial number)
+            $dispatch_code = date('Y', strtotime($dispatch->inserted_at)).'-'.sprintf('%06d', $dispatch->id);
+            // ==== Update
+            Dispatch::where('id', $dispatch->id)->update([
+                'dispatch_code' => $dispatch_code
+            ]);
 
             return redirect()->route('dispatch.index')->with('message','Your record has been successfully created.');
 
@@ -110,7 +116,6 @@ class DispatchController extends Controller
 
             $dispatch = Dispatch::findOrFail($id);
 
-            $dispatch->dispatch_code = $request->dispatch_code;
             $dispatch->user_id = Auth::user()->id;
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;

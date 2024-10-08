@@ -40,21 +40,11 @@ Bhairaav | Add Dispatch
 
             <div class="pd-20 card-box mb-30">
                 <div class="form-group row mt-3">
-                    <label class="col-sm-2"><b>Dispatch Code : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
-                        <input type="text" name="dispatch_code" id="dispatch_code" class="form-control @error('dispatch_code') is-invalid @enderror" value="{{ old('dispatch_code') }}" placeholder="Enter Dispatch Code.">
-                        @error('dispatch_code')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
                     <label class="col-sm-2"><b>Distributor Name : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <select class="custom-select2 form-control @error('distributor_id') is-invalid @enderror" name="distributor_id" id="distributor_id" style="width: 100%; height: 38px;">
                             <option value=" " >Select Distributor Name</option>
-                            <optgroup label="Category">
+                            <optgroup label="">
                                 @foreach ($distributors as $value)
                                     <option value="{{ $value->id }}" {{ old('distributor_id') == $value->id ? 'selected' : '' }}>{{ $value->distributor_name }}</option>
                                 @endforeach
@@ -66,14 +56,12 @@ Bhairaav | Add Dispatch
                             </span>
                         @enderror
                     </div>
-                </div>
 
-                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Product Name : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <select class="custom-select2 form-control @error('product_id') is-invalid @enderror" name="product_id" id="product_id" style="width: 100%; height: 38px;">
                             <option value=" " >Select Product Name</option>
-                            <optgroup label="Category">
+                            <optgroup label="">
                                 @foreach ($products as $value)
                                     <option value="{{ $value->id }}" {{ old('product_id') == $value->id ? 'selected' : '' }}>{{ $value->name }}</option>
                                 @endforeach
@@ -85,7 +73,9 @@ Bhairaav | Add Dispatch
                             </span>
                         @enderror
                     </div>
+                </div>
 
+                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Quantity : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="text" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" placeholder="Enter Quantity.">
@@ -95,19 +85,19 @@ Bhairaav | Add Dispatch
                             </span>
                         @enderror
                     </div>
-                </div>
 
-                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Dispatch Date : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
-                        <input type="text" name="dispatched_at" id="dispatched_at" class="form-control date-picker @error('dispatched_at') is-invalid @enderror" value="{{ old('dispatched_at') }}" placeholder="Enter Dispatch Date.">
+                        <input type="text" name="dispatched_at" id="dispatched_at" class="form-control date-picker @error('dispatched_at') is-invalid @enderror" value="{{ date('d-m-Y') }}" placeholder="Enter Dispatch Date.">
                         @error('dispatched_at')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
                     </div>
+                </div>
 
+                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>External QrCode Serial Number : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
@@ -156,6 +146,7 @@ Bhairaav | Add Dispatch
 @endsection
 
 @push('scripts')
+
 <script>
     $(document).ready(function () {
         // Variable to store the previously selected value
@@ -203,4 +194,14 @@ Bhairaav | Add Dispatch
         });
     });
 </script>
+
+<label class="col-sm-2"><b>Dispatch Date : <span class="text-danger">*</span></b></label>
+<div class="col-sm-4 col-md-4">
+    <input type="text" name="dispatched_at" id="dispatched_at" class="form-control date-picker @error('dispatched_at') is-invalid @enderror" value="{{ old('dispatched_at') }}" placeholder="Enter Dispatch Date.">
+    @error('dispatched_at')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+    @enderror
+</div>
 @endpush

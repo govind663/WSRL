@@ -23,7 +23,6 @@ class DispatchRequest extends FormRequest
     {
         if ($this->id){
             $rule = [
-                'dispatch_code' => 'required|string|min:2',
                 'distributor_id' => 'required|numeric|min:0',
                 'product_id' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric',
@@ -33,7 +32,6 @@ class DispatchRequest extends FormRequest
             ];
         }else{
             $rule = [
-                'dispatch_code' => 'required|string|min:2',
                 'distributor_id' => 'required|numeric|min:0',
                 'product_id' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric',
