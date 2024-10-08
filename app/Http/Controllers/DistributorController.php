@@ -38,7 +38,6 @@ class DistributorController extends Controller
 
             $distributor = new Distributor();
 
-            $distributor->distributor_code = $request->distributor_code;
             $distributor->distributor_gstin = $request->distributor_gstin;
             $distributor->distributor_name = $request->distributor_name;
             $distributor->distributor_pos = $request->distributor_pos;
@@ -54,6 +53,13 @@ class DistributorController extends Controller
             $distributor->inserted_at = Carbon::now();
             $distributor->inserted_by = Auth::user()->id;
             $distributor->save();
+
+            // === generate distrbuted code include (year, 6-digit serial number)
+            $distributor_code = date('Y', strtotime($distributor->inserted_at)).'-'.sprintf('%06d', $distributor->id);
+            // ==== Update
+            Distributor::where('id', $distributor->id)->update([
+                'distributor_code' => $distributor_code
+            ]);
 
             return redirect()->route('distributor.index')->with('message','Your record has been successfully created.');
 
@@ -91,7 +97,6 @@ class DistributorController extends Controller
 
             $distributor = Distributor::findOrFail($id);
 
-            $distributor->distributor_code = $request->distributor_code;
             $distributor->distributor_gstin = $request->distributor_gstin;
             $distributor->distributor_name = $request->distributor_name;
             $distributor->distributor_pos = $request->distributor_pos;

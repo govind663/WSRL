@@ -27,7 +27,7 @@ class DispatchRequest extends FormRequest
                 'distributor_id' => 'required|numeric|min:0',
                 'product_id' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric',
-                'remarks' => 'required|string',
+                'remarks' => 'nullable|string',
                 'external_qr_code_serial_number.*' => 'required|string',
                 'dispatched_at' => 'required',
             ];
@@ -37,7 +37,7 @@ class DispatchRequest extends FormRequest
                 'distributor_id' => 'required|numeric|min:0',
                 'product_id' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric',
-                'remarks' => 'required|string',
+                'remarks' => 'nullable|string',
                 'external_qr_code_serial_number.*' => 'required|string',
                 'dispatched_at' => 'required',
             ];

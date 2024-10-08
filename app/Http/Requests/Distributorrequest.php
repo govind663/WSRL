@@ -23,7 +23,6 @@ class Distributorrequest extends FormRequest
     {
         if ($this->id){
             $rule = [
-                'distributor_code' => 'required|string|max:255',
                 'distributor_gstin' => 'required|string|max:255',
                 'distributor_name' => 'required|string|max:255',
                 'distributor_pos' => 'required|string|max:255',
@@ -38,7 +37,6 @@ class Distributorrequest extends FormRequest
             ];
         }else{
             $rule = [
-                'distributor_code' => 'required|string|max:255|unique:distributors,distributor_code',
                 'distributor_gstin' => 'required|string|max:255|unique:distributors,distributor_gstin',
                 'distributor_name' => 'required|string|max:255',
                 'distributor_pos' => 'required|string|max:255',
@@ -58,11 +56,6 @@ class Distributorrequest extends FormRequest
     public function messages()
     {
         return [
-            'distributor_code.required' => 'Distributor Code is required',
-            'distributor_code.string' => 'Distributor Code should be a string',
-            'distributor_code.max' => 'Distributor Code should not exceed 255 characters',
-            'distributor_code.unique' => 'Distributor Code should be unique',
-
             'distributor_gstin.required' => 'Distributor GSTIN is required',
             'distributor_gstin.string' => 'Distributor GSTIN should be a string',
             'distributor_gstin.max' => 'Distributor GSTIN should not exceed 255 characters',
@@ -83,8 +76,8 @@ class Distributorrequest extends FormRequest
             'email.required' => 'Email Id is required',
             'email.email' => 'Please enter a valid Email address',
 
-            'address.required' => 'Distributor Address (1) is required',
-            'address.max' => 'Distributor Address (1) should not exceed 255 characters',
+            'address.required' => 'Permanent Address is required',
+            'address.max' => 'Permanent Address should not exceed 255 characters',
 
             'division.required' => 'Division is required',
             'division.string' => 'Division should be a string',

@@ -56,8 +56,7 @@ WSRL | Manaage  Distributor
                     <thead>
                         <tr>
                             <th>Sr. No.</th>
-                            <th>Unique Code</th>
-                            <th>Distributor POS</th>
+                            {{-- <th>Distributor POS</th> --}}
                             <th>Name</th>
                             <th>Email Id</th>
                             <th>Mobile Number</th>
@@ -75,8 +74,7 @@ WSRL | Manaage  Distributor
                         @foreach ($distributors as $key => $value)
                         <tr>
                             <td class="text-wrap text-justify">{{ ++$key }}</td>
-                            <td class="text-wrap text-justify">{{ $value->distributor_code }}</td>
-                            <td class="text-wrap text-justify">{{ $value->distributor_pos }}</td>
+                            {{-- <td class="text-wrap text-justify">{{ $value->distributor_pos }}</td> --}}
                             <td class="text-wrap text-justify">{{ $value->distributor_name }}</td>
                             <td class="text-wrap text-justify">{{ $value->email }}</td>
                             <td class="text-wrap text-justify">{{ $value->contact_person }}</td>

@@ -40,16 +40,6 @@ Bhairaav | Add Distributor
 
             <div class="pd-20 card-box mb-30">
                 <div class="form-group row mt-3">
-                    <label class="col-sm-2"><b>Distributor Code : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
-                        <input type="text" name="distributor_code" id="distributor_code" class="form-control @error('distributor_code') is-invalid @enderror" value="{{ old('distributor_code') }}" placeholder="Enter Distributor Code.">
-                        @error('distributor_code')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
                     <label class="col-sm-2"><b>Distributor GSTIN : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="text" name="distributor_gstin" id="distributor_gstin" class="form-control @error('distributor_gstin') is-invalid @enderror" value="{{ old('distributor_gstin') }}" placeholder="Enter Distributor GSTIN.">
@@ -59,9 +49,7 @@ Bhairaav | Add Distributor
                             </span>
                         @enderror
                     </div>
-                </div>
 
-                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Distributor Name : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="text" name="distributor_name" id="distributor_name" class="form-control @error('distributor_name') is-invalid @enderror" value="{{ old('distributor_name') }}" placeholder="Enter Distributor Name.">
@@ -71,7 +59,9 @@ Bhairaav | Add Distributor
                             </span>
                         @enderror
                     </div>
+                </div>
 
+                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Distributor POS : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="text" name="distributor_pos" id="distributor_pos" class="form-control @error('distributor_pos') is-invalid @enderror" value="{{ old('distributor_pos') }}" placeholder="Enter Distributor POS.">
@@ -81,9 +71,7 @@ Bhairaav | Add Distributor
                             </span>
                         @enderror
                     </div>
-                </div>
 
-                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Email Id : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Enter Email Id.">
@@ -93,7 +81,9 @@ Bhairaav | Add Distributor
                             </span>
                         @enderror
                     </div>
+                </div>
 
+                <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>Mobile Number : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <input type="text" maxlength="10" name="contact_person" id="contact_person" class="form-control @error('contact_person') is-invalid @enderror" value="{{ old('contact_person') }}" placeholder="Enter Mobile Number.">
@@ -103,11 +93,9 @@ Bhairaav | Add Distributor
                             </span>
                         @enderror
                     </div>
-                </div>
 
-                <div class="form-group row mt-3">
-                    <label class="col-sm-1"><b>State : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-2 col-md-2">
+                    <label class="col-sm-2"><b>State : <span class="text-danger">*</span></b></label>
+                    <div class="col-sm-4 col-md-4">
                         <input type="text" name="state" id="state" class="form-control @error('state') is-invalid @enderror" value="{{ old('state') }}" placeholder="Enter State.">
                         @error('state')
                             <span class="invalid-feedback" role="alert">
@@ -115,9 +103,11 @@ Bhairaav | Add Distributor
                             </span>
                         @enderror
                     </div>
+                </div>
 
-                    <label class="col-sm-1"><b>City : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-2 col-md-2">
+                <div class="form-group row mt-3">
+                    <label class="col-sm-2"><b>City : <span class="text-danger">*</span></b></label>
+                    <div class="col-sm-4 col-md-4">
                         <input type="text" name="city" id="city" class="form-control @error('city') is-invalid @enderror" value="{{ old('city') }}" placeholder="Enter City.">
                         @error('city')
                             <span class="invalid-feedback" role="alert">
@@ -160,18 +150,18 @@ Bhairaav | Add Distributor
                 </div>
 
                 <div class="form-group row mt-3">
-                    <label class="col-sm-2"><b>Distributor Address (1) : <span class="text-danger">*</span></b></label>
+                    <label class="col-sm-2"><b>Permanent Address : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
-                        <textarea type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}" placeholder="Enter Distributor Address.">{{ old('address') }}</textarea>
+                        <textarea type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}" placeholder="Enter Permanent Address.">{{ old('address') }}</textarea>
                         @error('address')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
                     </div>
-                    <label class="col-sm-2"><b>Distributor Address (2) : </b></label>
+                    <label class="col-sm-2"><b>Other Address : </b></label>
                     <div class="col-sm-4 col-md-4">
-                        <textarea type="text" name="other_address" id="other_address" class="form-control @error('other_address') is-invalid @enderror" value="{{ old('other_address') }}" placeholder="Enter Distributor other_Address.">{!! old('other_address') !!}</textarea>
+                        <textarea type="text" name="other_address" id="other_address" class="form-control @error('other_address') is-invalid @enderror" value="{{ old('other_address') }}" placeholder="Enter Other Address.">{!! old('other_address') !!}</textarea>
                         @error('other_address')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

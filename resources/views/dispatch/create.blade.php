@@ -124,7 +124,7 @@ Bhairaav | Add Dispatch
                 </div>
 
                 <div class="form-group row mt-3">
-                    <label class="col-sm-4"><b>Remarks : <span class="text-danger">*</span></b></label>
+                    <label class="col-sm-4"><b>Remarks : </b></label>
                     <div class="col-sm-12 col-md-12">
                         <textarea type="text" name="remarks" id="remarks" class="textarea_editor form-control @error('remarks') is-invalid @enderror" value="{!! old('remarks') !!}" placeholder="Enter Remarks.">{!! old('remarks') !!}</textarea>
                         @error('remarks')
