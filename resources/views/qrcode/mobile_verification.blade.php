@@ -52,9 +52,13 @@
                             <h2 class="text-center text-primary">Mobile Verification</h2>
                         </div>
 
+                        <p>Enter your mobile number to get OTP</p>
+
                         <form method="POST" action="{{ route('generate.otp') }}" aria-label="{{ __('Mobile Verification') }}" enctype="multipart/form-data">
                             @csrf
 
+                            {{-- fetch $scannedNumber --}}
+                            <input type="text" name="scannedNumber" id="scannedNumber" hidden value="{{ $scannedNumber }}">
                             <div class="input-group custom">
                                 <input type="text" name="mobile_number" id="mobile_number"  class="form-control form-control-lg @error('mobile_number') is-invalid @enderror" value="{{ old('mobile_number') }}" placeholder="Enter Mobile Number" />
                                 <div class="input-group-append custom">
