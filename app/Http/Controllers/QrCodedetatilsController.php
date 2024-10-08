@@ -18,9 +18,9 @@ class QrCodedetatilsController extends Controller
             ->first();
 
         // Check if QR code exists
-        if (!$qrCode) {
-            return redirect()->back()->with('error', 'QR code not found.');
-        }
+        // if (!$qrCode) {
+        //     return redirect()->back()->with('error', 'QR code not found.');
+        // }
 
         // Convert the JSON fields back into arrays for easier access
         $internalQrCodes = json_decode($qrCode->internal_qr_code, true);
