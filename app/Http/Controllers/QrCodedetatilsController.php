@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Otp;
 use App\Models\QrCodeScan;
 use Illuminate\Http\Request;
 use App\Models\QrCode;
@@ -86,6 +87,14 @@ class QrCodedetatilsController extends Controller
         // Store OTP in session for later verification
         session(['otp' => $otp]);
 
+        // Store OTP in the database with an expiration time (optional)
+        Otp::create([
+            'mobile_number' => $request->mobile_number,
+            'otp' => $otp,
+            'expires_at' => Carbon::now()->addMinutes(10), // OTP expires in 10 minutes
+            'inserted_dt' => Carbon::now(),
+            'inserted_by' => 1,
+        ]);
         // Request scannedNumber
         $scannedNumber = $request->input('scannedNumber');
 
