@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 
-class QrCodeController extends Controller
+class backUpQrCodeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -56,18 +56,6 @@ class QrCodeController extends Controller
             // Get current date in YYYYMMDD format (8 characters)
             $date = Carbon::now()->format('Ymd');
 
-            // Path to save QR code images
-            $internalQrPath = storage_path('app/public/qr-codes/internal/');
-            $externalQrPath = storage_path('app/public/qr-codes/external/');
-
-            // Ensure the directories exist
-            if (!file_exists($internalQrPath)) {
-                mkdir($internalQrPath, 0755, true);
-            }
-            if (!file_exists($externalQrPath)) {
-                mkdir($externalQrPath, 0755, true);
-            }
-
             // Loop through the quantity and generate internal/external QR codes
             for ($i = 0; $i < $quantity; $i++) {
                 // Generate a random 2-digit number to create a 10-digit serial number
@@ -81,34 +69,24 @@ class QrCodeController extends Controller
                 // Define QR code size
                 $qrCodeSize = 300;
 
-                // File names for the QR code images
-                $internalQrFileName = $uniqueInternalNumber . '.png';
-                $externalQrFileName = $uniqueExternalNumber . '.png';
+                // Generate Internal QR Code URL
+                $internalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueInternalNumber]);
+                $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)->generate($internalQRCodeUrl);
 
-                // Full paths to save the QR codes
-                $internalQrFullPath = $internalQrPath . $internalQrFileName;
-                $externalQrFullPath = $externalQrPath . $externalQrFileName;
-
-                // Generate and save Internal QR Code as an image
-                $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->format('png')
-                    ->generate(route('qr.show', ['unique_number' => $uniqueInternalNumber]), $internalQrFullPath);
-
-                // Generate and save External QR Code as an image
-                $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)
-                    ->format('png')
-                    ->generate(route('qr.show', ['unique_number' => $uniqueExternalNumber]), $externalQrFullPath);
+                // Generate External QR Code URL
+                $externalQRCodeUrl = route('qr.show', ['unique_number' => $uniqueExternalNumber]);
+                $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)->generate($externalQRCodeUrl);
 
                 // Append to internal and external QR code arrays
                 $internalQRCodes[] = [
-                    'qr_code_image' => asset('storage/qr-codes/internal/' . $internalQrFileName),
+                    'qr_code' => $internalQRCodeContent,
                     'unique_number' => $uniqueInternalNumber,
                     'status' => 'active',
                     'printed_date' => Carbon::now()->toDateString() // Add the printed date
                 ];
 
                 $externalQRCodes[] = [
-                    'qr_code_image' => asset('storage/qr-codes/external/' . $externalQrFileName),
+                    'qr_code' => $externalQRCodeContent,
                     'unique_number' => $uniqueExternalNumber,
                     'status' => 'active',
                     'printed_date' => Carbon::now()->toDateString() // Add the printed date
@@ -145,7 +123,6 @@ class QrCodeController extends Controller
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
-
 
 
     /**
