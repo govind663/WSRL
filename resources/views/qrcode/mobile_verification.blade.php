@@ -56,12 +56,17 @@
                             @csrf
 
                             <div class="input-group custom">
-                                <input type="text" class="form-control form-control-lg" placeholder="Enter Mobile Number" />
+                                <input type="text" name="mobile_number" id="mobile_number"  class="form-control form-control-lg @error('mobile_number') is-invalid @enderror" value="{{ old('mobile_number') }}" placeholder="Enter Mobile Number" />
                                 <div class="input-group-append custom">
                                     <span class="input-group-text">
                                         <i class="fa fa-mobile-phone" aria-hidden="true"></i>
                                     </span>
                                 </div>
+                                @error('mobile_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
 
                             <div class="row align-items-center">

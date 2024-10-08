@@ -59,12 +59,17 @@
                             @csrf
 
                             <div class="input-group custom">
-                                <input type="text" name="otp" id="otp" class="form-control form-control-lg" placeholder="Enter OTP" />
+                                <input type="text" name="otp" id="otp" class="form-control form-control-lg @error('otp') is-invalid @enderror" placeholder="Enter OTP" value="{{ old('otp') }}"/>
                                 <div class="input-group-append custom">
                                     <span class="input-group-text">
                                         <i class="fa fa-mobile-phone" aria-hidden="true"></i>
                                     </span>
                                 </div>
+                                @error('otp')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
 
                             <div class="row align-items-center">
