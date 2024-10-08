@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\QrCodeScan;
 use Illuminate\Http\Request;
 use App\Models\QrCode;
+use Carbon\Carbon;
 
 class QrCodedetatilsController extends Controller
 {
@@ -37,6 +38,8 @@ class QrCodedetatilsController extends Controller
             QrCodeScan::create([
                 'qr_code_id' => $qrCode->id,
                 'type' => 'internal',
+                'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
+                'inserted_by' => $qrCode->id,
             ]);
         } elseif ($isExternal) {
             $qrCode->increment('external_qr_code_scan_count'); // Increment without limit
@@ -45,6 +48,8 @@ class QrCodedetatilsController extends Controller
             QrCodeScan::create([
                 'qr_code_id' => $qrCode->id,
                 'type' => 'external',
+                'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
+                'inserted_by' => $qrCode->id,
             ]);
         } else {
             return redirect()->back()->with('error', 'QR code type not recognized.');
