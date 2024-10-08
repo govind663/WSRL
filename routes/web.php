@@ -74,3 +74,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
 // ===== Show QR Code with encrypted
 Route::get('/qr/{unique_number}', [QrCodedetatilsController::class, 'show'])->name('qr.show');
+
+// ===== generate opt
+Route::post('/generate-otp', [QrCodedetatilsController::class, 'generateOtp'])->name('generate.otp');
+
+// ===== OTP verification
+Route::post('/verify-otp', [QrCodedetatilsController::class, 'verifyOtp'])->name('verify.otp');

@@ -78,4 +78,39 @@ class QrCodedetatilsController extends Controller
         return redirect()->back()->with('error', 'QR code type not recognized.');
     }
 
+    public function generateOtp(Request $request)
+    {
+        // Validate mobile number input
+        $request->validate([
+            'mobile_number' => 'required|numeric|digits:10',
+        ]);
+
+        // Generate a random OTP
+        $otp = rand(100000, 999999);
+
+        // Store OTP in session for later verification
+        session(['otp' => $otp]);
+
+        // Return a view displaying the OTP
+        return view('otp.show', ['otp' => $otp, 'mobile_number' => $request->mobile_number]);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        // Validate the OTP input
+        $request->validate([
+            'otp' => 'required|numeric|digits:6',
+        ]);
+
+        // Check if the OTP matches the one in session
+        if ($request->otp == session('otp')) {
+            // OTP is correct, proceed with verification success logic
+            session()->forget('otp'); // Clear the OTP after successful verification
+            return view('qrcode.show')->with('success', 'OTP verified successfully!');
+        } else {
+            // OTP is incorrect
+            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+        }
+    }
+
 }

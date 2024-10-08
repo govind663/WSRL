@@ -10,11 +10,13 @@
 
     <!-- Site favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/assets/vendors/images/apple-touch-icon.png') }}" />
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/assets/vendors/images/favicon-32x32.png') }}" />
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/assets/vendors/images/favicon-16x16.png') }}" />
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ asset('/assets/vendors/images/favicon-32x32.png') }}" />
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ asset('/assets/vendors/images/favicon-16x16.png') }}" />
 
     <!-- Title -->
-    <title>QR Code Details</title>
+    <title>Mobile Verification</title>
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/core.css') }}" />
@@ -47,39 +49,32 @@
                 <div class="col-md-6">
                     <div class="login-box bg-white box-shadow border-radius-10">
                         <div class="login-title">
-                            @if ($isInternal)
-                                <h2 class="text-center text-primary">Product Details</h2>
-                            @elseif ($isExternal)
-                                <h2 class="text-center text-primary">Distributor Details</h2>
-                            @endif
+                            <h2 class="text-center text-primary">Mobile Verification</h2>
                         </div>
-                        <!-- QR Code Details Section -->
-                        <div class="pb-20">
-                            <p><strong>Unique Number:</strong> {{ $qrCode->unique_number }}</p>
 
-                            <!-- Displaying QR code type and scanned number -->
-                            @if ($isInternal)
-                                <p><strong>Type:</strong> Internal</p>
-                                <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
-                                <p><strong>Internal QR Code Count:</strong> {{ $internalQrCodeCount }}</p> <!-- Display the count -->
+                        <p>Mobile Number: <strong>{{ $mobile_number }}</strong></p>
+                        <p>Your OTP is: <strong>{{ $otp }}</strong></p>
 
-                                <!-- Displaying related user details -->
-                                <p><strong>User Name:</strong> {{ $qrCode->user->name ?? 'N/A' }}</p>
-                                <p><strong>User Email:</strong> {{ $qrCode->user->email ?? 'N/A' }}</p>
-                            @elseif ($isExternal)
-                                <p><strong>Type:</strong> External</p>
-                                <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
-                                <p><strong>External QR Code Count:</strong> {{ $externalQrCodeCount }}</p> <!-- Display the count -->
+                        <form method="POST" action="{{ route('verify.otp') }}" aria-label="{{ __('Mobile Verification') }}" enctype="multipart/form-data">
+                            @csrf
 
-                                <!-- Displaying related product details -->
-                                <p><strong>Product Name:</strong> {{ $qrCode->product->name ?? 'N/A' }}</p>
-                                <p><strong>Product Description:</strong> {!! $qrCode->product->description ?? 'N/A' !!}</p>
-                            @else
-                                <p><strong>Type:</strong> Not Found</p>
-                            @endif
+                            <div class="input-group custom">
+                                <input type="text" name="otp" id="otp" class="form-control form-control-lg" placeholder="Enter OTP" />
+                                <div class="input-group-append custom">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-mobile-phone" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
 
-                            <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
-                        </div>
+                            <div class="row align-items-center">
+                                <div class="col-5">
+                                    <div class="input-group mb-0">
+                                        <button type="submit" class="btn btn-primary btn-block">{{ __('Verify OTP') }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
 
                     </div>
                 </div>

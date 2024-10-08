@@ -23,6 +23,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/icon-font.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/styles/style.css') }}" />
 
+    <!-- Toaster Message -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 </head>
 
 <body>
@@ -47,8 +52,9 @@
                             <h2 class="text-center text-primary">Mobile Verification</h2>
                         </div>
 
-                        <form method="POST" action="#" aria-label="{{ __('Mobile Verification') }}" enctype="multipart/form">
+                        <form method="POST" action="{{ route('generate.otp') }}" aria-label="{{ __('Mobile Verification') }}" enctype="multipart/form-data">
                             @csrf
+
                             <div class="input-group custom">
                                 <input type="text" class="form-control form-control-lg" placeholder="Enter Mobile Number" />
                                 <div class="input-group-append custom">
@@ -57,6 +63,7 @@
                                     </span>
                                 </div>
                             </div>
+
                             <div class="row align-items-center">
                                 <div class="col-5">
                                     <div class="input-group mb-0">
@@ -77,6 +84,11 @@
     <script src="{{ asset('assets/vendors/scripts/script.min.js') }}"></script>
     <script src="{{ asset('assets/vendors/scripts/process.js') }}"></script>
     <script src="{{ asset('asset/vendors/scripts/layout-settings.js') }}"></script>
+
+    <!-- Toaster Message -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </body>
 
 </html>
