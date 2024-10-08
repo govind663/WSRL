@@ -127,6 +127,8 @@ class QrCodeController extends Controller
             $qrCode->external_qr_code_count = count($externalQRCodes);
             $qrCode->internal_qr_code_status = 'active';
             $qrCode->external_qr_code_status = 'active';
+            $qrCode->internal_qr_code_images = json_encode(array_column($internalQRCodes, 'qr_code_image')); // Store internal QR code image paths
+            $qrCode->external_qr_code_images = json_encode(array_column($externalQRCodes, 'qr_code_image')); // Store external QR code image paths
             $qrCode->inserted_dt = Carbon::now();
             $qrCode->inserted_by = $userId;
             $qrCode->save();
@@ -145,8 +147,6 @@ class QrCodeController extends Controller
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
-
-
 
     /**
      * Display the specified resource.
