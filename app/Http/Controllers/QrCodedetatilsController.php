@@ -168,7 +168,8 @@ class QrCodedetatilsController extends Controller
                 'externalQrCodeCount' => $qrCode->external_qr_code_scan_count, // Pass external count
                 'scanRecords' => QrCodeScan::where('qr_code_id', $qrCode->id)->count(),
             ];
-            return view('qrcode.show',['viewData' => $viewData])->with('success', 'OTP verified successfully!');
+
+            return view('qrcode.show',$viewData)->with('success', 'OTP verified successfully!');
         } else {
             // OTP is incorrect
             return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
