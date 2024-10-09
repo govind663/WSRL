@@ -65,7 +65,7 @@ WSRL | Manaage  QrCode
                             <th>External Scan <br> QrCode Count</th>
 
                             @can('qrcode-edit')
-                            <th class="no-export">View</th>
+                            <th class="no-export">Print</th>
                             @endcan
                             @can('qrcode-delete')
                             <th class="no-export">Delete</th>
@@ -119,7 +119,7 @@ WSRL | Manaage  QrCode
                             <td class="no-export">
                                 <a href="{{ route('qrcode.showPdf', $value->unique_number) }}" target="_blank">
                                     <button class="btn btn-warning btn-sm">
-                                        <i class="micon dw dw-eye"></i>
+                                        <i class="fas fa-print"></i>
                                     </button>
                                 </a>
                             </td>
