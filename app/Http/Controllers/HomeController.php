@@ -16,10 +16,10 @@ class HomeController extends Controller
     public function adminHome(Request $request)
     {
         // === Total Sum of Product Validated by Distributor in internal_qr_code_count
-        $totalNumberProductValidateCount =QrCode::where('internal_qr_code_scan_count', '>', 0)->count();
+        $totalNumberProductValidateCount = QrCode::where('internal_qr_code_scan_count', '>', 0)->sum('internal_qr_code_scan_count');
 
         // === Total Sum of Product Validated by Doctor in external_qr_code_count
-        $totalNumberDoctorValidateCount =QrCode::where('external_qr_code_scan_count', '>', 0)->count();
+        $totalNumberDoctorValidateCount = QrCode::where('external_qr_code_scan_count', '>', 0)->sum('external_qr_code_scan_count');
 
         return view('home',[
             'totalNumberProductValidateCount' => $totalNumberProductValidateCount,
