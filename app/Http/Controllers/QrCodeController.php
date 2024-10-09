@@ -18,7 +18,12 @@ class QrCodeController extends Controller
      */
     public function index()
     {
-        //
+        // ==== Fetch QrCode
+        $qrcodes = QrCode::whereNull('deleted_at')->orderBy('id', 'desc')->get();
+
+        return view('qrcode.index', [
+            'qrcodes' => $qrcodes
+        ]);
     }
 
     /**
@@ -59,6 +64,7 @@ class QrCodeController extends Controller
             // Path to save QR code images in the public folder
             $internalQrPath = public_path('qr-codes/internal/');
             $externalQrPath = public_path('qr-codes/external/');
+            $pdfPath = public_path('qr-codes/pdfs/'); // Define PDF path
 
             // Ensure the directories exist
             if (!file_exists($internalQrPath)) {
@@ -66,6 +72,9 @@ class QrCodeController extends Controller
             }
             if (!file_exists($externalQrPath)) {
                 mkdir($externalQrPath, 0755, true);
+            }
+            if (!file_exists($pdfPath)) { // Ensure PDF directory exists
+                mkdir($pdfPath, 0755, true);
             }
 
             // Loop through the quantity and generate internal/external QR codes
@@ -141,7 +150,14 @@ class QrCodeController extends Controller
                 'user' => $user,
             ]);
 
-            return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
+            // return $pdf->stream($qrCode->unique_number . '_QR_codes.pdf');
+
+            // Save PDF to the defined path
+            $pdfFilePath = $pdfPath . $qrCode->unique_number . '_QR_codes.pdf';
+            $pdf->save($pdfFilePath);
+
+            // Return a response with a script to open the PDF and redirect with success message
+            return response()->view('qrcode.index', ['pdfUrl' => asset('qr-codes/pdfs/' . $qrCode->unique_number . '_QR_codes.pdf')])->header('Content-Type', 'text/html')->with('message', 'QR codes created successfully.');
 
         } catch (\Exception $ex) {
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
