@@ -33,7 +33,7 @@ WSRL | Manaage  QrCode
                     </nav>
                 </div>
 
-                {{-- @can('product-create') --}}
+                @can('qrcode-create')
                 <div class="col-md-6 col-sm-12 text-right">
                     <div class="dropdown">
                         <a class="btn btn-primary" href="{{ route('qrcode.create') }}">
@@ -42,7 +42,7 @@ WSRL | Manaage  QrCode
 
                     </div>
                 </div>
-                {{-- @endcan --}}
+                @endcan
             </div>
         </div>
 
@@ -56,28 +56,68 @@ WSRL | Manaage  QrCode
                     <thead>
                         <tr>
                             <th>Sr. No.</th>
-                            <th>SKU Code</th>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Status</th>
-                            {{-- @can('product-edit') --}}
+                            <th>Unique Number</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Internal QrCode </th>
+                            <th>External QrCode </th>
+                            <th>Internal Scan QrCode Count</th>
+                            <th>External Scan QrCode Count</th>
+
+                            @can('qrcode-edit')
                             <th class="no-export">View</th>
-                            {{-- @endcan --}}
-                            {{-- @can('product-delete') --}}
+                            @endcan
+                            @can('qrcode-delete')
                             <th class="no-export">Delete</th>
-                            {{-- @endcan --}}
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($qrcodes as $key => $value)
                         <tr>
                             <td class="text-wrap text-justify">{{ ++$key }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
 
-                            {{-- @can('product-edit') --}}
+                            <td class="text-wrap text-justify">
+                                {{ $value->unique_number }}
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                {{ $value->user?->name }}
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                {{ $value->product?->name }}
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                @php
+                                    $data = json_decode($value->internal_qr_code, true);
+                                @endphp
+
+                                @foreach ($data as $key => $value)
+                                    <span class="badge badge-primary">{{ $value }}</span>
+                                @endforeach
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                @php
+                                    $data = json_decode($value->external_qr_code, true);
+                                @endphp
+
+                                @foreach ($data as $key => $value)
+                                    <span class="badge badge-primary">{{ $value }}</span>
+                                @endforeach
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                {{ $value->internal_scan_qrcode_count }}
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                {{ $value->external_scan_qrcode_count }}
+                            </td>
+
+                            @can('qrcode-edit')
                             <td class="no-export">
                                 <a href="{{ route('qrcode.show', $value->id) }}">
                                     <button class="btn btn-warning btn-sm">
@@ -85,8 +125,8 @@ WSRL | Manaage  QrCode
                                     </button>
                                 </a>
                             </td>
-                            {{-- @endcan --}}
-                            {{-- @can('product-delete') --}}
+                            @endcan
+                            @can('qrcode-delete')
                             <td class="no-export">
                                 <form action="{{ route('qrcode.destroy', $value->id) }}" method="post">
                                     @csrf
@@ -97,7 +137,7 @@ WSRL | Manaage  QrCode
                                     </button>
                                 </form>
                             </td>
-                            {{-- @endcan --}}
+                            @endcan
                         </tr>
                         @endforeach
                     </tbody>

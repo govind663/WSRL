@@ -19,7 +19,7 @@ class QrCodeController extends Controller
     public function index()
     {
         // ==== Fetch QrCode
-        $qrcodes = QrCode::whereNull('deleted_at')->orderBy('id', 'desc')->get();
+        $qrcodes = QrCode::with('user', 'product')->whereNull('deleted_at')->orderBy('id', 'desc')->get();
 
         return view('qrcode.index', [
             'qrcodes' => $qrcodes
