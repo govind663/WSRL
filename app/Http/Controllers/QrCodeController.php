@@ -203,7 +203,51 @@ class QrCodeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Get the current user's ID for tracking deletions
+        $data['deleted_by'] = Auth::user()->id;
+        $data['deleted_at'] = Carbon::now();
+
+        try {
+            // Find the QR code entry
+            $qrCode = QrCode::findOrFail($id);
+
+            // Get the image names and PDF file path
+            $internalQrCodes = json_decode($qrCode->internal_qr_code_images);
+            $externalQrCodes = json_decode($qrCode->external_qr_code_images);
+            $pdfFilePath = public_path('qr-codes/pdfs/' . $qrCode->unique_number . '_QR_codes.pdf');
+
+            // Define paths to the internal and external QR code images
+            $internalQrPath = public_path('qr-codes/internal/');
+            $externalQrPath = public_path('qr-codes/external/');
+
+            // Delete internal QR code images
+            foreach ($internalQrCodes as $imageName) {
+                $imagePath = $internalQrPath . $imageName;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath); // Delete the file
+                }
+            }
+
+            // Delete external QR code images
+            foreach ($externalQrCodes as $imageName) {
+                $imagePath = $externalQrPath . $imageName;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath); // Delete the file
+                }
+            }
+
+            // Delete the PDF file
+            if (file_exists($pdfFilePath)) {
+                unlink($pdfFilePath); // Delete the PDF
+            }
+
+            // Update the QR code record to mark it as deleted
+            $qrCode->update($data);
+
+            return redirect()->route('qrcode.index')->with('message', 'Your record has been successfully deleted.');
+        } catch (\Exception $ex) {
+            return redirect()->back()->with('error', 'Something Went Wrong - ' . $ex->getMessage());
+        }
     }
 
 }

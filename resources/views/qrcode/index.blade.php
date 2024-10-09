@@ -82,11 +82,11 @@ WSRL | Manaage  QrCode
                             </td>
 
                             <td class="text-wrap text-justify">
-                                {{ $value->user?->name }}
+                                {{ $value->product?->name }}
                             </td>
 
                             <td class="text-wrap text-justify">
-                                {{ $value->product?->name }}
+                                {{ $value->user?->name }}
                             </td>
 
                             <td class="text-wrap text-justify">
@@ -124,6 +124,7 @@ WSRL | Manaage  QrCode
                                 </a>
                             </td>
                             @endcan
+
                             @can('qrcode-delete')
                             <td class="no-export">
                                 <form action="{{ route('qrcode.destroy', $value->id) }}" method="post">
