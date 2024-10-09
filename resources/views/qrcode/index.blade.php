@@ -75,6 +75,7 @@ WSRL | Manaage  QrCode
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
 
                             {{-- @can('product-edit') --}}
                             <td class="no-export">

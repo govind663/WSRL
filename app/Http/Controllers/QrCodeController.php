@@ -157,7 +157,7 @@ class QrCodeController extends Controller
             $pdf->save($pdfFilePath);
 
             // Return a response with a script to open the PDF and redirect with success message
-            return response()->view('qrcode.index', ['pdfUrl' => asset('qr-codes/pdfs/' . $qrCode->unique_number . '_QR_codes.pdf')])->header('Content-Type', 'text/html')->with('message', 'QR codes created successfully.');
+            return redirect()->route('qrcode.index', ['pdfUrl' => asset('qr-codes/pdfs/' . $qrCode->unique_number . '_QR_codes.pdf')])->header('Content-Type', 'text/html')->with('message', 'QR codes created successfully.');
 
         } catch (\Exception $ex) {
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
