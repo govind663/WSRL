@@ -38,16 +38,16 @@ WSRL | WSRL
             <div class="card-box height-100-p widget-style3">
                 <div class="d-flex flex-wrap">
                     <div class="widget-data">
-                        <div class="weight-700 font-24 text-dark">
-                            0
+                        <div class="weight-900 font-24 text-dark">
+                            {{ $totalNumberProductValidateCount ?? 0 }}
                         </div>
-                        <div class="font-14 text-secondary weight-500">
-                            Total Projects
+                        <div class="font-14 text-primary weight-500">
+                            Total Number of Product Validated by Distributor
                         </div>
                     </div>
                     <div class="widget-icon">
                         <div class="icon" data-color="#00eccf">
-                            <i class="icon-copy dw dw-file"></i>
+                            <i class="icon-copy dw dw-user1"></i>
                         </div>
                     </div>
                 </div>
@@ -57,54 +57,16 @@ WSRL | WSRL
             <div class="card-box height-100-p widget-style3">
                 <div class="d-flex flex-wrap">
                     <div class="widget-data">
-                        <div class="weight-700 font-24 text-dark">
-                            0
+                        <div class="weight-900 font-24 text-dark">
+                            {{ $totalNumberDoctorValidateCount ?? 0 }}
                         </div>
-                        <div class="font-14 text-secondary weight-500">
-                            Total Ongoing Projects
+                        <div class="font-14 text-primary weight-500">
+                            Total Number of Product Validated by Doctor
                         </div>
                     </div>
                     <div class="widget-icon">
                         <div class="icon" data-color="#ff5b5b">
-                            <span class="icon-copy ti-file"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
-            <div class="card-box height-100-p widget-style3">
-                <div class="d-flex flex-wrap">
-                    <div class="widget-data">
-                        <div class="weight-700 font-24 text-dark">
-                            0
-                        </div>
-                        <div class="font-14 text-secondary weight-500">
-                            Total Completed Projected
-                        </div>
-                    </div>
-                    <div class="widget-icon">
-                        <div class="icon">
-                            <i class="icon-copy fa fa-file-code-o" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
-            <div class="card-box height-100-p widget-style3">
-                <div class="d-flex flex-wrap">
-                    <div class="widget-data">
-                        <div class="weight-700 font-24 text-dark">
-                            0
-                        </div>
-                        <div class="font-14 text-secondary weight-500">
-                            Total Upcoming Projects
-                        </div>
-                    </div>
-                    <div class="widget-icon">
-                        <div class="icon" data-color="#09cc06">
-                            <i class="icon-copy fa fa-file" aria-hidden="true"></i>
+                            <span class="fa fa-stethoscope"></span>
                         </div>
                     </div>
                 </div>

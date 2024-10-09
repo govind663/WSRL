@@ -15,7 +15,16 @@ class HomeController extends Controller
      */
     public function adminHome(Request $request)
     {
-        return view('home');
+        // === Total Sum of Product Validated by Distributor in internal_qr_code_count
+        $totalNumberProductValidateCount =QrCode::where('internal_qr_code_count', '>', 0)->count();
+
+        // === Total Sum of Product Validated by Doctor in external_qr_code_count
+        $totalNumberDoctorValidateCount =QrCode::where('external_qr_code_count', '>', 0)->count();
+
+        return view('home',[
+            'totalNumberProductValidateCount' => $totalNumberProductValidateCount,
+            'totalNumberDoctorValidateCount' => $totalNumberDoctorValidateCount
+        ]);
     }
 
     public function fetchAvilableQuantity(Request $request)
