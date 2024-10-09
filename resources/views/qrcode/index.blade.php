@@ -72,20 +72,9 @@ WSRL | Manaage  QrCode
                         @foreach ($qrcodes as $key => $value)
                         <tr>
                             <td class="text-wrap text-justify">{{ ++$key }}</td>
-                            <td class="text-wrap text-justify">{{ $value->sku }}</td>
-                            <td class="text-wrap text-justify">{{ $value->name }}</td>
-                            <td class="text-wrap text-justify">
-                                {{-- @if(!empty($value->image)) --}}
-                                    <img src="{{url('/')}}/bhairaav/product/image/{{ $value->image }}" width="100px" height="100px" alt="{{ $value->image }}">
-                                {{-- @endif --}}
-                            </td>
-                            <td class="text-wrap text-justify">
-                                @if ($value->in_stock == 1)
-                                <span class="badge badge-success">In Stock</span>
-                                @else
-                                <span class="badge badge-danger">Out of Stock</span>
-                                @endif
-                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
 
                             {{-- @can('product-edit') --}}
                             <td class="no-export">
