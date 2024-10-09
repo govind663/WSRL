@@ -91,30 +91,28 @@ WSRL | Manaage  QrCode
 
                             <td class="text-wrap text-justify">
                                 @php
-                                    $data = json_decode($value->internal_qr_code, true);
+                                    $internalQrData = json_decode($value->internal_qr_code, true) ?? [];
                                 @endphp
-
-                                @foreach ($data as $key => $value)
-                                    <span class="badge badge-primary">{{ $value }}</span>
+                                @foreach ($internalQrData as $qr)
+                                    <span class="badge badge-primary">{{ $qr }}</span>
                                 @endforeach
                             </td>
 
                             <td class="text-wrap text-justify">
                                 @php
-                                    $data = json_decode($value->external_qr_code, true);
+                                    $externalQrData = json_decode($value->external_qr_code, true) ?? [];
                                 @endphp
-
-                                @foreach ($data as $key => $value)
-                                    <span class="badge badge-primary">{{ $value }}</span>
+                                @foreach ($externalQrData as $qr)
+                                    <span class="badge badge-primary">{{ $qr }}</span>
                                 @endforeach
                             </td>
 
                             <td class="text-wrap text-justify">
-                                {{ $value->internal_scan_qrcode_count }}
+                                {{ $value->internal_qr_code_scan_count }}
                             </td>
 
                             <td class="text-wrap text-justify">
-                                {{ $value->external_scan_qrcode_count }}
+                                {{ $value->external_qr_code_scan_count }}
                             </td>
 
                             @can('qrcode-edit')
