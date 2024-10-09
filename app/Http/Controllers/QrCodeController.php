@@ -90,25 +90,25 @@ class QrCodeController extends Controller
                 $externalQrFullPath = $externalQrPath . $externalQrFileName;
 
                 // Generate and save Internal QR Code as an image
-                $internalQRCodeContent = GenerateQrCode::size($qrCodeSize)
+                GenerateQrCode::size($qrCodeSize)
                     ->format('png')
                     ->generate(route('qr.show', ['unique_number' => $uniqueInternalNumber]), $internalQrFullPath);
 
                 // Generate and save External QR Code as an image
-                $externalQRCodeContent = GenerateQrCode::size($qrCodeSize)
+                GenerateQrCode::size($qrCodeSize)
                     ->format('png')
                     ->generate(route('qr.show', ['unique_number' => $uniqueExternalNumber]), $externalQrFullPath);
 
                 // Append to internal and external QR code arrays
                 $internalQRCodes[] = [
-                    'qr_code_image' => asset('storage/qr-codes/internal/' . $internalQrFileName),
+                    'qr_code_image_name' => $internalQrFileName,
                     'unique_number' => $uniqueInternalNumber,
                     'status' => 'active',
                     'printed_date' => Carbon::now()->toDateString() // Add the printed date
                 ];
 
                 $externalQRCodes[] = [
-                    'qr_code_image' => asset('storage/qr-codes/external/' . $externalQrFileName),
+                    'qr_code_image_name' => $externalQrFileName,
                     'unique_number' => $uniqueExternalNumber,
                     'status' => 'active',
                     'printed_date' => Carbon::now()->toDateString() // Add the printed date
@@ -127,8 +127,8 @@ class QrCodeController extends Controller
             $qrCode->external_qr_code_count = count($externalQRCodes);
             $qrCode->internal_qr_code_status = 'active';
             $qrCode->external_qr_code_status = 'active';
-            $qrCode->internal_qr_code_images = json_encode(array_column($internalQRCodes, 'qr_code_image')); // Store internal QR code image paths
-            $qrCode->external_qr_code_images = json_encode(array_column($externalQRCodes, 'qr_code_image')); // Store external QR code image paths
+            $qrCode->internal_qr_code_images = json_encode(array_column($internalQRCodes, 'qr_code_image_name')); // Store internal QR code image names
+            $qrCode->external_qr_code_images = json_encode(array_column($externalQRCodes, 'qr_code_image_name')); // Store external QR code image names
             $qrCode->inserted_dt = Carbon::now();
             $qrCode->inserted_by = $userId;
             $qrCode->save();
