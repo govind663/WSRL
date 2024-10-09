@@ -117,7 +117,7 @@ WSRL | Manaage  QrCode
 
                             @can('qrcode-edit')
                             <td class="no-export">
-                                <a href="{{ route('qrcode.showPdf', $value->unique_number) }}">
+                                <a href="{{ route('qrcode.showPdf', $value->unique_number) }}" target="_blank">
                                     <button class="btn btn-warning btn-sm">
                                         <i class="micon dw dw-eye"></i>
                                     </button>
