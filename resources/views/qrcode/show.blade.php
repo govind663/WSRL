@@ -63,22 +63,23 @@
                                 <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
                                 <p><strong>Internal QR Code Count:</strong> {{ $internalQrCodeCount }}</p> <!-- Display the count -->
 
-                                <!-- Displaying related user details -->
-                                <p><strong>User Name:</strong> {{ $qrCode->user->name ?? 'N/A' }}</p>
-                                <p><strong>User Email:</strong> {{ $qrCode->user->email ?? 'N/A' }}</p>
+                                <!-- Displaying related product details -->
+                                <p><strong>Product Name:</strong> {{ $qrCode->product->name ?? 'N/A' }}</p>
+                                <p><strong>Product Description:</strong> {!! $qrCode->product->description ?? 'N/A' !!}</p>
+
                             @elseif ($isExternal)
                                 <p><strong>Type:</strong> External</p>
                                 <p><strong>Scanned Serial Number:</strong> {{ $scannedNumber }}</p>
                                 <p><strong>External QR Code Count:</strong> {{ $externalQrCodeCount }}</p> <!-- Display the count -->
 
-                                <!-- Displaying related product details -->
-                                <p><strong>Product Name:</strong> {{ $qrCode->product->name ?? 'N/A' }}</p>
-                                <p><strong>Product Description:</strong> {!! $qrCode->product->description ?? 'N/A' !!}</p>
+                                <!-- Displaying related user details -->
+                                <p><strong>User Name:</strong> {{ $qrCode->user->name ?? 'N/A' }}</p>
+                                <p><strong>User Email:</strong> {{ $qrCode->user->email ?? 'N/A' }}</p>
                             @else
                                 <p><strong>Type:</strong> Not Found</p>
                             @endif
 
-                            <p><strong>Inserted Date:</strong> {{ $qrCode->inserted_dt }}</p>
+                            <p><strong>Created Date:</strong> {{ $qrCode->inserted_dt }}</p>
                         </div>
 
                     </div>
