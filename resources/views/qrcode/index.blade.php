@@ -61,8 +61,8 @@ WSRL | Manaage  QrCode
                             <th>Quantity</th>
                             {{-- <th>Internal QrCode </th>
                             <th>External QrCode </th> --}}
-                            <th>Internal Scan QrCode Count</th>
-                            <th>External Scan QrCode Count</th>
+                            <th>Internal Scan <br> QrCode Count</th>
+                            <th>External Scan <br> QrCode Count</th>
 
                             @can('qrcode-edit')
                             <th class="no-export">View</th>
