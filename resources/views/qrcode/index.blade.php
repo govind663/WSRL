@@ -119,7 +119,7 @@ WSRL | Manaage  QrCode
                             <td class="no-export">
                                 <a href="{{ route('qrcode.showPdf', $value->unique_number) }}" target="_blank">
                                     <button class="btn btn-warning btn-sm">
-                                        <i class="fas fa-print"></i>
+                                        <i class="fa fa-print"></i>
                                     </button>
                                 </a>
                             </td>
