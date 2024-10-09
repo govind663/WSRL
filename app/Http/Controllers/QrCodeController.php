@@ -56,9 +56,9 @@ class QrCodeController extends Controller
             // Get current date in YYYYMMDD format (8 characters)
             $date = Carbon::now()->format('Ymd');
 
-            // Path to save QR code images
-            $internalQrPath = storage_path('app/public/qr-codes/internal/');
-            $externalQrPath = storage_path('app/public/qr-codes/external/');
+            // Path to save QR code images in the public folder
+            $internalQrPath = public_path('qr-codes/internal/');
+            $externalQrPath = public_path('qr-codes/external/');
 
             // Ensure the directories exist
             if (!file_exists($internalQrPath)) {
