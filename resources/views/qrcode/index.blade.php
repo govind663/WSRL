@@ -5,11 +5,11 @@ WSRL | Manaage  QrCode
 @endsection
 
 @push('styles')
-{{-- <style>
+<style>
     .flex-wrap {
         display: none !important;
     }
-</style> --}}
+</style>
 @endpush
 
 @section('content')
@@ -59,8 +59,8 @@ WSRL | Manaage  QrCode
                             <th>Unique Number</th>
                             <th>Product</th>
                             <th>Quantity</th>
-                            <th>Internal QrCode </th>
-                            <th>External QrCode </th>
+                            {{-- <th>Internal QrCode </th>
+                            <th>External QrCode </th> --}}
                             <th>Internal Scan QrCode Count</th>
                             <th>External Scan QrCode Count</th>
 
@@ -89,23 +89,23 @@ WSRL | Manaage  QrCode
                                 {{ $value->user?->name }}
                             </td>
 
-                            <td class="text-wrap text-justify">
+                            {{-- <td class="text-wrap text-justify">
                                 @php
                                     $internalQrData = json_decode($value->internal_qr_code, true) ?? [];
                                 @endphp
                                 @foreach ($internalQrData as $qr)
                                     <span class="badge badge-primary">{{ $qr }}</span>
                                 @endforeach
-                            </td>
+                            </td> --}}
 
-                            <td class="text-wrap text-justify">
+                            {{-- <td class="text-wrap text-justify">
                                 @php
                                     $externalQrData = json_decode($value->external_qr_code, true) ?? [];
                                 @endphp
                                 @foreach ($externalQrData as $qr)
                                     <span class="badge badge-primary">{{ $qr }}</span>
                                 @endforeach
-                            </td>
+                            </td> --}}
 
                             <td class="text-wrap text-justify">
                                 {{ $value->internal_qr_code_scan_count }}

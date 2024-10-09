@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('sku')->unique()->nullable();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->boolean('in_stock')->nullable();
+            $table->boolean('in_stock')->nullable()->comment('
+                1 - Ready,
+                0 - Not ready
+            ');
             $table->integer('total_quantity')->nullable();
             $table->integer('available_quantity')->nullable();
             $table->integer('price')->nullable();

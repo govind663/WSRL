@@ -81,9 +81,9 @@ WSRL | Manaage  Product
                             </td>
                             <td class="text-wrap text-justify">
                                 @if ($value->in_stock == 1)
-                                <span class="badge badge-success">In Stock</span>
+                                <span class="badge badge-success">Ready</span>
                                 @else
-                                <span class="badge badge-danger">Out of Stock</span>
+                                <span class="badge badge-danger">Not Ready</span>
                                 @endif
                             </td>
 

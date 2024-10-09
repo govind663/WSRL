@@ -5,11 +5,11 @@ WSRL | Manaage  User
 @endsection
 
 @push('styles')
-{{-- <style>
+<style>
     .flex-wrap {
         display: none !important;
     }
-</style> --}}
+</style>
 @endpush
 
 @section('content')
