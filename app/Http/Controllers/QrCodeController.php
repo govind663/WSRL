@@ -241,8 +241,8 @@ class QrCodeController extends Controller
                 unlink($pdfFilePath); // Delete the PDF
             }
 
-            // Update the QR code record to mark it as deleted
-            $qrCode->update($data);
+            // Delete the QR code record permanently
+            $qrCode->delete();
 
             return redirect()->route('qrcode.index')->with('message', 'Your record has been successfully deleted.');
         } catch (\Exception $ex) {
