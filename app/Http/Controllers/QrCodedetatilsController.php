@@ -176,4 +176,16 @@ class QrCodedetatilsController extends Controller
         }
     }
 
+    public function showPdf(string $unique_number)
+    {
+        $pdfFilePath = public_path('qr-codes/pdfs/' . $unique_number . '_QR_codes.pdf');
+
+        // Check if the file exists
+        if (file_exists($pdfFilePath)) {
+            return response()->file($pdfFilePath); // Serve the file
+        }
+
+        return redirect()->back()->with('error', 'PDF not found.');
+    }
+
 }

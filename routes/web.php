@@ -80,3 +80,6 @@ Route::post('/generate-otp', [QrCodedetatilsController::class, 'generateOtp'])->
 
 // ===== OTP verification
 Route::post('/verify-otp', [QrCodedetatilsController::class, 'verifyOtp'])->name('verify.otp');
+
+// ===== Show Generated PDF
+Route::get('/qr-codes/pdf/{unique_number}', [QrCodedetatilsController::class, 'showPdf'])->name('qrcode.showPdf');
