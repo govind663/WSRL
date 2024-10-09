@@ -30,7 +30,7 @@ WSRL | WSRL
     </div>
 
     <div class="title pb-20">
-        <h2 class="h3 mb-0">Project Overview</h2>
+        <h2 class="h3 mb-0">Product Overview</h2>
     </div>
 
     <div class="row pb-10">
