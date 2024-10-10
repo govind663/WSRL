@@ -101,10 +101,10 @@ Bhairaav | Edit Dispatch
                 </div>
 
                 <div class="form-group row mt-3">
-                    <label class="col-sm-2"><b>External QrCode Serial Number : <span class="text-danger">*</span></b></label>
+                    <label class="col-sm-2"><b>External QR Code Serial Number : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
-                            <optgroup label="External QrCode Serial Number">
+                            <optgroup label="External QR Code Serial Number">
                                 @foreach ($externalQrCodes as $qrCode)
                                     <option value="{{ $qrCode }}"
                                     {{ is_array(json_decode($dispatch->external_qr_code_serial_number, true)) && in_array($qrCode, json_decode($dispatch->external_qr_code_serial_number, true)) ? 'selected' : '' }}>

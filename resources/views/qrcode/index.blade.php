@@ -49,7 +49,7 @@ WSRL | Manaage  QrCode
         <!-- Export Datatable start -->
         <div class="card-box mb-30">
             <div class="pd-20">
-                <h4 class="text-blue h4">All  QrCode List</h4>
+                <h4 class="text-blue h4">All QR Code List</h4>
             </div>
             <div class="pb-20">
                 <table class="table hover multiple-select-row data-table-export1 nowrap p-3">

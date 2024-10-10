@@ -98,11 +98,11 @@ Bhairaav | Add Dispatch
                 </div>
 
                 <div class="form-group row mt-3">
-                    <label class="col-sm-2"><b>External QrCode Serial Number : <span class="text-danger">*</span></b></label>
+                    <label class="col-sm-2"><b>External QR Code Serial Number : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-4 col-md-4">
                         <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
-                            <option value=" " >Select External QrCode Serial Number</option>
-                            <optgroup label="External QrCode Serial Number">
+                            <option value=" " >Select External QR Code Serial Number</option>
+                            <optgroup label="External QR Code Serial Number">
                             </optgroup>
                         </select>
                         @error('external_qr_code_serial_number')
