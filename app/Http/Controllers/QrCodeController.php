@@ -87,8 +87,8 @@ class QrCodeController extends Controller
                 $uniqueInternalNumber = $date . $randomNumberInternal; // 8 characters for date + 2 random digits
                 $uniqueExternalNumber = $date . $randomNumberExternal; // 8 characters for date + 2 random digits
 
-                // Define QR code size
-                $qrCodeSize = 300;
+                // Define QR code size (2 cm = 76 pixels)
+                $qrCodeSize = 76;
 
                 // File names for the QR code images
                 $internalQrFileName = $uniqueInternalNumber . '.png';
