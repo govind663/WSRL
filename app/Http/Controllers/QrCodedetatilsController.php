@@ -139,6 +139,8 @@ class QrCodedetatilsController extends Controller
                 QrCodeScan::create([
                     'qr_code_id' => $qrCode->id,
                     'type' => 'internal',
+                    'internal_serial_no_qr_code' => $isInternal,
+                    'external_serial_no_qr_code' => null,
                     'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
                     'inserted_by' => $qrCode->id,
                 ]);
@@ -149,6 +151,8 @@ class QrCodedetatilsController extends Controller
                 QrCodeScan::create([
                     'qr_code_id' => $qrCode->id,
                     'type' => 'external',
+                    'internal_serial_no_qr_code' => null,
+                    'external_serial_no_qr_code' => $isExternal,
                     'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
                     'inserted_by' => $qrCode->id,
                 ]);
