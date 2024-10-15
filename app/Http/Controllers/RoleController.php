@@ -133,10 +133,6 @@ class RoleController extends Controller
             $permissionsToAdd = array_diff($newPermissions, $existingPermissions);
             $permissionsToRemove = array_diff($existingPermissions, $newPermissions);
 
-            // Log for debugging
-            Log::info('Permissions to add: ', $permissionsToAdd);
-            Log::info('Permissions to remove: ', $permissionsToRemove);
-
             // Add new permissions
             if (!empty($permissionsToAdd)) {
                 $permissions = Permission::whereIn('id', $permissionsToAdd)->pluck('name')->toArray();
