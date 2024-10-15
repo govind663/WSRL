@@ -91,7 +91,7 @@ WSRL | Manaage  QrCode
                             </td>
 
                             <td class="text-wrap text-justify">
-                                {{-- {{ $value->avilable_quantity }} --}}
+                                {{ $value->avilable_quantity }}
                             </td>
 
                             {{-- <td class="text-wrap text-justify">
