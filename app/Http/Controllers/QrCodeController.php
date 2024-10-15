@@ -79,13 +79,21 @@ class QrCodeController extends Controller
 
             // Loop through the quantity and generate internal/external QR codes
             for ($i = 0; $i < $quantity; $i++) {
-                // Generate a random 2-digit number to create a 10-digit serial number
-                $randomNumberInternal = str_pad(mt_rand(0, 99), 2, '0', STR_PAD_LEFT);
-                $randomNumberExternal = str_pad(mt_rand(0, 99), 2, '0', STR_PAD_LEFT);
 
-                // Combine the date and the random number to get a 10-digit serial number
-                $uniqueInternalNumber = $date . $randomNumberInternal; // 8 characters for date + 2 random digits
-                $uniqueExternalNumber = $date . $randomNumberExternal; // 8 characters for date + 2 random digits
+                // Generate a random 4-digit number to enhance uniqueness
+                $randomNumberInternal = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+                $randomNumberExternal = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+                // Include microseconds to further ensure uniqueness
+                $microtime = str_pad((int)(microtime(true) * 1000), 13, '0', STR_PAD_LEFT);
+
+                // Combine product ID, date, random numbers, and microtime for more uniqueness
+                $uniqueInternalNumber = $date . $product->id . $randomNumberInternal . substr($microtime, -4);
+                $uniqueExternalNumber = $date . $product->id . $randomNumberExternal . substr($microtime, -4);
+
+                // Ensure these numbers are still manageable in length, adjust if needed
+                $uniqueInternalNumber = substr($uniqueInternalNumber, 0, 16);
+                $uniqueExternalNumber = substr($uniqueExternalNumber, 0, 16);
 
                 // Define QR code size (2 cm = 76 pixels)
                 $qrCodeSize = 76;
