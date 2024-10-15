@@ -103,7 +103,7 @@ Bhairaav | Edit Dispatch
                 <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>External QR Code Serial Number : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-6 col-md-6">
-                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
+                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;" data-placeholder="Select External QR Code Serial Number">
                             <optgroup label="External QR Code Serial Number">
                                 @foreach ($externalQrCodes as $qrCode)
                                     <option value="{{ $qrCode }}"
@@ -119,7 +119,6 @@ Bhairaav | Edit Dispatch
                             </span>
                         @enderror
                     </div>
-
                 </div>
 
                 <div class="form-group row mt-3">
@@ -165,7 +164,9 @@ Bhairaav | Edit Dispatch
 
         $('#product_id').on('change', function () {
             var product_id = this.value;
-            $("#external_qr_code_serial_number").val(null).trigger('change'); // Clear previous selection
+
+            // Clear previous selections
+            var selectedValues = $('#external_qr_code_serial_number').val();
             $("#external_qr_code_serial_number").html(''); // Clear the dropdown
 
             $.ajax({
@@ -180,27 +181,32 @@ Bhairaav | Edit Dispatch
                     // Set the available quantity
                     $("#avilable_product_quantity").val(result.available_quantity);
 
-                    // Populate the external QR code dropdown
-                    if (result.external_qr_codes.length > 0) {
+                    // Check if there are available external QR codes
+                    if (result.external_qr_codes && result.external_qr_codes.length > 0) {
+                        // Populate the external QR code dropdown with new options
                         $.each(result.external_qr_codes, function(index, value) {
                             $("#external_qr_code_serial_number").append(
                                 '<option value="' + value + '">' + value + '</option>'
                             );
                         });
                     } else {
+                        // If no QR codes are available, show a placeholder option
                         $("#external_qr_code_serial_number").append(
                             '<option value="">No External QR Codes Available</option>'
                         );
                     }
 
-                    // Trigger the change event to update Select2
-                    $("#external_qr_code_serial_number").trigger('change');
+                    // Ensure previously selected values are retained
+                    $("#external_qr_code_serial_number").val(selectedValues).trigger('change');
                 },
                 error: function (xhr, status, error) {
                     console.error("Error fetching available quantity:", error);
                 }
             });
         });
+
+        // Trigger the change event on document ready to ensure the initial state is set
+        $('#product_id').trigger('change');
     });
 </script>
 @endpush
