@@ -86,7 +86,7 @@ WSRL | Manaage  QrCode
                             </td>
 
                             <td class="text-wrap text-justify">
-                                {{ $value->user?->name }}
+                                {{ $value->quantity }}
                             </td>
 
                             {{-- <td class="text-wrap text-justify">
