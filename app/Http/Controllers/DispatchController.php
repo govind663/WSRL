@@ -9,6 +9,7 @@ use App\Models\Distributor;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DispatchController extends Controller
 {
@@ -65,6 +66,11 @@ class DispatchController extends Controller
             Dispatch::where('id', $dispatch->id)->update([
                 'dispatch_code' => $dispatch_code
             ]);
+
+            // Update available_quantity in qr_codes based on the dispatched quantity
+            DB::table('qr_codes')
+                ->where('product_id', $dispatch->product_id)
+                ->decrement('available_quantity', $dispatch->quantity);
 
             return redirect()->route('dispatch.index')->with('message','Your record has been successfully created.');
 
@@ -126,6 +132,11 @@ class DispatchController extends Controller
             $dispatch->modified_at = Carbon::now();
             $dispatch->modified_by = Auth::user()->id;
             $dispatch->save();
+
+            // Update available_quantity in qr_codes based on the dispatched quantity
+            DB::table('qr_codes')
+                ->where('product_id', $dispatch->product_id)
+                ->decrement('available_quantity', $dispatch->quantity);
 
             return redirect()->route('dispatch.index')->with('message','Your record has been successfully updated.');
         } catch(\Exception $ex){
