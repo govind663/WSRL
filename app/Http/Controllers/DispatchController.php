@@ -71,9 +71,10 @@ class DispatchController extends Controller
             $qrCode = DB::table('qr_codes')->where('product_id', $dispatch->product_id)->first();
 
             if ($qrCode) {
-                if (isset($qrCode->quantity)) {
+                if (isset($qrCode->avilable_quantity)) {
                     // Calculate new available_quantity
-                    $newAvailableQuantity = $qrCode->quantity - $dispatch->quantity;
+                    $currentAvailableQuantity = $qrCode->avilable_quantity;
+                    $newAvailableQuantity = $currentAvailableQuantity - $dispatch->quantity;
 
                     // Check if the new available quantity is not negative
                     if ($newAvailableQuantity < 0) {
@@ -160,7 +161,8 @@ class DispatchController extends Controller
             if ($qrCode) {
                 if (isset($qrCode->quantity)) {
                     // Calculate new available_quantity
-                    $newAvailableQuantity = $qrCode->quantity - $dispatch->quantity;
+                    $currentAvailableQuantity = $qrCode->avilable_quantity;
+                    $newAvailableQuantity = $currentAvailableQuantity - $dispatch->quantity;
 
                     // Check if the new available quantity is not negative
                     if ($newAvailableQuantity < 0) {
