@@ -100,7 +100,7 @@ Bhairaav | Add Dispatch
                 <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>External QR Code Serial Number : <span class="text-danger">*</span></b></label>
                     <div class="col-sm-6 col-md-6">
-                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;" data-placeholder="Select External QR Code Serial Number">
+                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;" data-placeholder="Select External QR Code Serial Number" disabled>
                             <optgroup label="External QR Code Serial Number">
                             </optgroup>
                         </select>
@@ -109,6 +109,11 @@ Bhairaav | Add Dispatch
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+                    </div>
+
+                    <label class="col-sm-2"><b>Selected External QR Code Serial Number : </b></label>
+                    <div class="col-sm-2 col-md-2">
+                        <input type="text" name="selected_count" id="selected-count" class="form-control" value="0" readonly>
                     </div>
                 </div>
 
@@ -147,6 +152,18 @@ Bhairaav | Add Dispatch
 @push('scripts')
 <script>
     $(document).ready(function () {
+        // Initialize Toastr options
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000", // Duration for which the toast will be visible
+            "extendedTimeOut": "1000", // Duration after hover before hiding
+        };
+
+        let warningShown = false; // Flag to track if warning has been shown
+        let previousSelection = []; // Variable to hold the last valid selection
+
         // Initialize Select2 for the external QR code serial number
         $('#external_qr_code_serial_number').select2({
             placeholder: "Select External QR Code Serial Number",
@@ -183,6 +200,8 @@ Bhairaav | Add Dispatch
                         );
                     }
 
+                    // Enable the dropdown after fetching data
+                    $("#external_qr_code_serial_number").prop('disabled', false);
                     // Trigger the change event to update Select2
                     $("#external_qr_code_serial_number").trigger('change');
                 },
@@ -191,6 +210,63 @@ Bhairaav | Add Dispatch
                 }
             });
         });
+
+        // Function to update selected count display
+        function updateSelectedCount() {
+            const selectedOptionsCount = $('#external_qr_code_serial_number').val()?.length || 0;
+            console.log("Selected Options Count:", selectedOptionsCount); // Debug log
+            $('#selected-count').val(selectedOptionsCount); // Update the count display in the input field
+        }
+
+        // Monitor quantity input
+        $('#quantity').on('input', function () {
+            const enteredQuantity = parseInt($(this).val());
+            const selectedOptions = $('#external_qr_code_serial_number').val() || [];
+
+            // Deselect options if selected exceeds entered quantity
+            if (selectedOptions.length > enteredQuantity) {
+                // Deselect the excess options
+                $('#external_qr_code_serial_number').val(selectedOptions.slice(0, enteredQuantity));
+                $("#external_qr_code_serial_number").trigger('change');
+            }
+
+            // Disable the dropdown if entered quantity is reached
+            if (enteredQuantity > 0) {
+                $('#external_qr_code_serial_number').prop('disabled', false);
+            } else {
+                $('#external_qr_code_serial_number').prop('disabled', true);
+            }
+
+            // Reset the warning flag when user changes the quantity
+            warningShown = false;
+            updateSelectedCount(); // Update count display after quantity change
+        });
+
+        // Show toast message when trying to select more options than entered quantity
+        $('#external_qr_code_serial_number').on('change', function() {
+            const enteredQuantity = parseInt($('#quantity').val());
+            const selectedOptions = $(this).val() || [];
+
+            // Check if the selection exceeds the limit
+            if (selectedOptions.length > enteredQuantity) {
+                // Show warning only if it hasn't been shown already
+                if (!warningShown) {
+                    toastr.warning('You can only select up to ' + enteredQuantity + ' External QR Code Serial Numbers.', 'Warning');
+                    warningShown = true; // Set the flag to true after showing the warning
+                }
+
+                // Revert to the last valid selection
+                $(this).val(previousSelection);
+                $(this).trigger('change');
+            } else {
+                // Update previous selection if within limit
+                previousSelection = selectedOptions; // Store the valid selection
+            }
+            updateSelectedCount(); // Update count display after selection change
+        });
+
+        // Initial count update
+        updateSelectedCount();
     });
 </script>
 @endpush

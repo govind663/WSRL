@@ -156,16 +156,29 @@ Bhairaav | Edit Dispatch
 @push('scripts')
 <script>
     $(document).ready(function () {
+        // Initialize Toastr options
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000", // Duration for which the toast will be visible
+            "extendedTimeOut": "1000", // Duration after hover before hiding
+        };
+
+        let warningShown = false; // Flag to track if warning has been shown
+        let previousSelection = []; // Variable to hold the last valid selection
+
         // Initialize Select2 for the external QR code serial number
         $('#external_qr_code_serial_number').select2({
             placeholder: "Select External QR Code Serial Number",
             allowClear: true // Allow clearing the selection
         });
 
+        // On product change
         $('#product_id').on('change', function () {
             var product_id = this.value;
 
-            // Clear previous selections
+            // Clear previous selections and dropdown options
             var selectedValues = $('#external_qr_code_serial_number').val();
             $("#external_qr_code_serial_number").html(''); // Clear the dropdown
 
@@ -204,6 +217,63 @@ Bhairaav | Edit Dispatch
                 }
             });
         });
+
+        // Function to update selected count display
+        function updateSelectedCount() {
+            const selectedOptionsCount = $('#external_qr_code_serial_number').val()?.length || 0;
+            console.log("Selected Options Count:", selectedOptionsCount); // Debug log
+            $('#selected-count').val(selectedOptionsCount); // Update the count display in the input field
+        }
+
+        // Monitor quantity input
+        $('#quantity').on('input', function () {
+            const enteredQuantity = parseInt($(this).val());
+            const selectedOptions = $('#external_qr_code_serial_number').val() || [];
+
+            // Deselect options if selected exceeds entered quantity
+            if (selectedOptions.length > enteredQuantity) {
+                // Deselect the excess options
+                $('#external_qr_code_serial_number').val(selectedOptions.slice(0, enteredQuantity));
+                $("#external_qr_code_serial_number").trigger('change');
+            }
+
+            // Disable the dropdown if entered quantity is reached
+            if (enteredQuantity > 0) {
+                $('#external_qr_code_serial_number').prop('disabled', false);
+            } else {
+                $('#external_qr_code_serial_number').prop('disabled', true);
+            }
+
+            // Reset the warning flag when user changes the quantity
+            warningShown = false;
+            updateSelectedCount(); // Update count display after quantity change
+        });
+
+        // Show toast message when trying to select more options than entered quantity
+        $('#external_qr_code_serial_number').on('change', function() {
+            const enteredQuantity = parseInt($('#quantity').val());
+            const selectedOptions = $(this).val() || [];
+
+            // Check if the selection exceeds the limit
+            if (selectedOptions.length > enteredQuantity) {
+                // Show warning only if it hasn't been shown already
+                if (!warningShown) {
+                    toastr.warning('You can only select up to ' + enteredQuantity + ' External QR Code Serial Numbers.', 'Warning');
+                    warningShown = true; // Set the flag to true after showing the warning
+                }
+
+                // Revert to the last valid selection
+                $(this).val(previousSelection);
+                $(this).trigger('change');
+            } else {
+                // Update previous selection if within limit
+                previousSelection = selectedOptions; // Store the valid selection
+            }
+            updateSelectedCount(); // Update count display after selection change
+        });
+
+        // Initial count update
+        updateSelectedCount();
 
         // Trigger the change event on document ready to ensure the initial state is set
         $('#product_id').trigger('change');
