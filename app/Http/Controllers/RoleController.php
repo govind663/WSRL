@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
@@ -113,6 +114,7 @@ class RoleController extends Controller
     {
         $data = $request->validated();
 
+        // DB::beginTransaction();
         try {
             $role = Role::findOrFail($id);
 
@@ -131,19 +133,31 @@ class RoleController extends Controller
             $permissionsToAdd = array_diff($newPermissions, $existingPermissions);
             $permissionsToRemove = array_diff($existingPermissions, $newPermissions);
 
+            // Log for debugging
+            Log::info('Permissions to add: ', $permissionsToAdd);
+            Log::info('Permissions to remove: ', $permissionsToRemove);
+
             // Add new permissions
             if (!empty($permissionsToAdd)) {
-                $role->givePermissionTo($permissionsToAdd);
+                $permissions = Permission::whereIn('id', $permissionsToAdd)->pluck('name')->toArray();
+                $role->givePermissionTo($permissions);
             }
 
             // Remove old permissions
             if (!empty($permissionsToRemove)) {
-                $role->revokePermissionTo($permissionsToRemove);
+                $permissions = Permission::whereIn('id', $permissionsToRemove)->pluck('name')->toArray();
+                $role->revokePermissionTo($permissions);
             }
+
+            // DB::commit();
+
+            // Clear cache to ensure changes take effect
+            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
             return redirect()->route('roles.index')->with('message', 'Role updated successfully.');
 
         } catch (\Exception $ex) {
+            // DB::rollBack();
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }

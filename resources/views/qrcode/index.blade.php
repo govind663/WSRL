@@ -58,7 +58,8 @@ WSRL | Manaage  QrCode
                             <th>Sr. No.</th>
                             <th>Unique Number</th>
                             <th>Product</th>
-                            <th>Quantity</th>
+                            <th>Total Quantity</th>
+                            <th>Avilable Quantity</th>
                             {{-- <th>Internal QrCode </th>
                             <th>External QrCode </th> --}}
                             <th>Internal Scan <br> QrCode Count</th>
@@ -87,6 +88,10 @@ WSRL | Manaage  QrCode
 
                             <td class="text-wrap text-justify">
                                 {{ $value->quantity }}
+                            </td>
+
+                            <td class="text-wrap text-justify">
+                                {{-- {{ $value->avilable_quantity }} --}}
                             </td>
 
                             {{-- <td class="text-wrap text-justify">
