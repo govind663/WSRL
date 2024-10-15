@@ -102,7 +102,7 @@ Bhairaav | Edit Dispatch
 
                 <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>External QR Code Serial Number : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
+                    <div class="col-sm-6 col-md-6">
                         <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
                             <optgroup label="External QR Code Serial Number">
                                 @foreach ($externalQrCodes as $qrCode)
@@ -157,11 +157,15 @@ Bhairaav | Edit Dispatch
 @push('scripts')
 <script>
     $(document).ready(function () {
-        // Variable to store the previously selected value
-        var previousValues = @json($externalQrCodes); // Get the previously selected QR codes from the server
+        // Initialize Select2 for the external QR code serial number
+        $('#external_qr_code_serial_number').select2({
+            placeholder: "Select External QR Code Serial Number",
+            allowClear: true // Allow clearing the selection
+        });
 
         $('#product_id').on('change', function () {
             var product_id = this.value;
+            $("#external_qr_code_serial_number").val(null).trigger('change'); // Clear previous selection
             $("#external_qr_code_serial_number").html(''); // Clear the dropdown
 
             $.ajax({
@@ -189,8 +193,8 @@ Bhairaav | Edit Dispatch
                         );
                     }
 
-                    // Re-select the previous values if they still exist
-                    $("#external_qr_code_serial_number").val(previousValues);
+                    // Trigger the change event to update Select2
+                    $("#external_qr_code_serial_number").trigger('change');
                 },
                 error: function (xhr, status, error) {
                     console.error("Error fetching available quantity:", error);
@@ -199,5 +203,4 @@ Bhairaav | Edit Dispatch
         });
     });
 </script>
-
 @endpush

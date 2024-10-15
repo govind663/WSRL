@@ -99,9 +99,8 @@ Bhairaav | Add Dispatch
 
                 <div class="form-group row mt-3">
                     <label class="col-sm-2"><b>External QR Code Serial Number : <span class="text-danger">*</span></b></label>
-                    <div class="col-sm-4 col-md-4">
-                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;">
-                            <option value=" " >Select External QR Code Serial Number</option>
+                    <div class="col-sm-6 col-md-6">
+                        <select class="custom-select2 form-control @error('external_qr_code_serial_number') is-invalid @enderror" multiple="multiple" name="external_qr_code_serial_number[]" id="external_qr_code_serial_number" style="width: 100%; height: 38px;" data-placeholder="Select External QR Code Serial Number">
                             <optgroup label="External QR Code Serial Number">
                             </optgroup>
                         </select>
@@ -146,17 +145,17 @@ Bhairaav | Add Dispatch
 @endsection
 
 @push('scripts')
-
 <script>
     $(document).ready(function () {
-        // Variable to store the previously selected value
-        var previousValue = '';
+        // Initialize Select2 for the external QR code serial number
+        $('#external_qr_code_serial_number').select2({
+            placeholder: "Select External QR Code Serial Number",
+            allowClear: true // Allow clearing the selection
+        });
 
         $('#product_id').on('change', function () {
-            // Store the previous value before changing
-            previousValue = $("#external_qr_code_serial_number").val();
-
             var product_id = this.value;
+            $("#external_qr_code_serial_number").val(null).trigger('change'); // Clear previous selection
             $("#external_qr_code_serial_number").html(''); // Clear the dropdown
 
             $.ajax({
@@ -184,8 +183,8 @@ Bhairaav | Add Dispatch
                         );
                     }
 
-                    // Re-select the previous value if it still exists
-                    $("#external_qr_code_serial_number").val(previousValue);
+                    // Trigger the change event to update Select2
+                    $("#external_qr_code_serial_number").trigger('change');
                 },
                 error: function (xhr, status, error) {
                     console.error("Error fetching available quantity:", error);
