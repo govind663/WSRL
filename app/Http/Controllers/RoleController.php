@@ -114,7 +114,6 @@ class RoleController extends Controller
         $data = $request->validated();
 
         try {
-
             $role = Role::findOrFail($id);
 
             $role->name = $data['name'];
@@ -122,18 +121,29 @@ class RoleController extends Controller
             $role->updated_by = Auth::user()->id;
             $role->save();
 
-            // Convert permission input to array of integers and sync them
-            $permissionsID = array_map(function ($value) {
-                return (int)$value;
-            }, $data['permission']);
+            // Convert permission input to array of integers
+            $newPermissions = array_map('intval', $data['permission']);
 
-            // Sync permissions with the role
-            $role->syncPermissions($permissionsID);
+            // Get existing permissions
+            $existingPermissions = $role->permissions->pluck('id')->toArray();
+
+            // Determine permissions to add and remove
+            $permissionsToAdd = array_diff($newPermissions, $existingPermissions);
+            $permissionsToRemove = array_diff($existingPermissions, $newPermissions);
+
+            // Add new permissions
+            if (!empty($permissionsToAdd)) {
+                $role->givePermissionTo($permissionsToAdd);
+            }
+
+            // Remove old permissions
+            if (!empty($permissionsToRemove)) {
+                $role->revokePermissionTo($permissionsToRemove);
+            }
 
             return redirect()->route('roles.index')->with('message', 'Role updated successfully.');
 
         } catch (\Exception $ex) {
-            // Handle any exception during the update process
             return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
