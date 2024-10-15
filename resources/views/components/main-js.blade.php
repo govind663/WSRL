@@ -25,7 +25,7 @@
 
 <!-- bootstrap-tagsinput js -->
 <script src="{{ asset('assets/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js') }}"></script>
-
+<script src="{{ asset('assets/vendors/scripts/advanced-components.js') }}"></script>
 <!-- Toaster Java Script -->
 <script>
     @if(Session::has('message'))

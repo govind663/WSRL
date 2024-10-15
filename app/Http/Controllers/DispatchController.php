@@ -46,7 +46,6 @@ class DispatchController extends Controller
     {
         $request->validated();
         try {
-
             $dispatch = new Dispatch();
 
             $dispatch->user_id = Auth::user()->id;
@@ -60,23 +59,42 @@ class DispatchController extends Controller
             $dispatch->inserted_by = Auth::user()->id;
             $dispatch->save();
 
-            // === generate dispatch code include (year, 6-digit serial number)
+            // Generate dispatch code including (year, 6-digit serial number)
             $dispatch_code = date('Y', strtotime($dispatch->inserted_at)).'-'.sprintf('%06d', $dispatch->id);
-            // ==== Update
+
+            // Update dispatch code
             Dispatch::where('id', $dispatch->id)->update([
                 'dispatch_code' => $dispatch_code
             ]);
 
             // Update available_quantity in qr_codes based on the dispatched quantity
-            DB::table('qr_codes')
-                ->where('product_id', $dispatch->product_id)
-                ->decrement('available_quantity', $dispatch->quantity);
+            $qrCode = DB::table('qr_codes')->where('product_id', $dispatch->product_id)->first();
 
-            return redirect()->route('dispatch.index')->with('message','Your record has been successfully created.');
+            if ($qrCode) {
+                if (isset($qrCode->quantity)) {
+                    // Calculate new available_quantity
+                    $newAvailableQuantity = $qrCode->quantity - $dispatch->quantity;
 
-        } catch(\Exception $ex){
+                    // Check if the new available quantity is not negative
+                    if ($newAvailableQuantity < 0) {
+                        return redirect()->back()->with('error', 'Insufficient quantity available.');
+                    }
 
-            return redirect()->back()->with('error','Something Went Wrong  - '.$ex->getMessage());
+                    // Update available_quantity in qr_codes table
+                    DB::table('qr_codes')
+                        ->where('product_id', $dispatch->product_id)
+                        ->update(['avilable_quantity' => $newAvailableQuantity]);
+                } else {
+                    return redirect()->back()->with('error', 'Total quantity is not defined for the product.');
+                }
+            } else {
+                return redirect()->back()->with('error', 'No QR code record found for the specified product.');
+            }
+
+            return redirect()->route('dispatch.index')->with('message', 'Your record has been successfully created.');
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
 
@@ -119,9 +137,12 @@ class DispatchController extends Controller
     {
         $request->validated();
         try {
-
             $dispatch = Dispatch::findOrFail($id);
 
+            // Get the old quantity before updating
+            $oldQuantity = $dispatch->quantity;
+
+            // Update the dispatch record with new data
             $dispatch->user_id = Auth::user()->id;
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;
@@ -134,14 +155,32 @@ class DispatchController extends Controller
             $dispatch->save();
 
             // Update available_quantity in qr_codes based on the dispatched quantity
-            DB::table('qr_codes')
-                ->where('product_id', $dispatch->product_id)
-                ->decrement('available_quantity', $dispatch->quantity);
+            $qrCode = DB::table('qr_codes')->where('product_id', $dispatch->product_id)->first();
 
-            return redirect()->route('dispatch.index')->with('message','Your record has been successfully updated.');
-        } catch(\Exception $ex){
+            if ($qrCode) {
+                if (isset($qrCode->quantity)) {
+                    // Calculate new available_quantity
+                    $newAvailableQuantity = $qrCode->quantity - $dispatch->quantity;
 
-            return redirect()->back()->with('error','Something Went Wrong  - '.$ex->getMessage());
+                    // Check if the new available quantity is not negative
+                    if ($newAvailableQuantity < 0) {
+                        return redirect()->back()->with('error', 'Insufficient quantity available.');
+                    }
+
+                    // Update available_quantity in qr_codes table
+                    DB::table('qr_codes')
+                        ->where('product_id', $dispatch->product_id)
+                        ->update(['avilable_quantity' => $newAvailableQuantity]);
+                } else {
+                    return redirect()->back()->with('error', 'Total quantity is not defined for the product.');
+                }
+            } else {
+                return redirect()->back()->with('error', 'No QR code record found for the specified product.');
+            }
+
+            return redirect()->route('dispatch.index')->with('message', 'Your record has been successfully updated.');
+        } catch (\Exception $ex) {
+            return redirect()->back()->with('error', 'Something went wrong - ' . $ex->getMessage());
         }
     }
 

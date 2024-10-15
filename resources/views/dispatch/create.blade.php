@@ -194,14 +194,4 @@ Bhairaav | Add Dispatch
         });
     });
 </script>
-
-<label class="col-sm-2"><b>Dispatch Date : <span class="text-danger">*</span></b></label>
-<div class="col-sm-4 col-md-4">
-    <input type="text" name="dispatched_at" id="dispatched_at" class="form-control date-picker @error('dispatched_at') is-invalid @enderror" value="{{ old('dispatched_at') }}" placeholder="Enter Dispatch Date.">
-    @error('dispatched_at')
-        <span class="invalid-feedback" role="alert">
-            <strong>{{ $message }}</strong>
-        </span>
-    @enderror
-</div>
 @endpush
