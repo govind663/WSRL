@@ -50,7 +50,9 @@ class PermissionTableSeeder extends Seeder
             'dispatch-create',
             'dispatch-edit',
             'dispatch-delete',
-
+            // report
+            'distributor-report-list',
+            'doctor-report-list',
         ];
 
         foreach ($permissions as $permission) {

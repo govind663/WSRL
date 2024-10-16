@@ -158,8 +158,6 @@
                 </li>
                 @endcan
 
-
-
                 @can('dispatch-list')
                 <li>
                     <a href="{{ route('dispatch.index') }}" class="dropdown-toggle no-arrow {{ ($currentRoute === 'dispatch.index') || ($currentRoute === 'dispatch.create') || ($currentRoute === 'dispatch.edit') ? 'active' : '' }}">
@@ -169,6 +167,22 @@
                 </li>
                 @endcan
 
+                <li class="dropdown @if(in_array($currentRoute, ['dispatch.validation-done-by-distributor-list'])) show @endif">
+                    <a href="javascript:;" class="dropdown-toggle">
+                        {{-- report Icon --}}
+                        <span class="micon bi bi-file-bar-graph"></span>
+                        <span class="mtext">Report</span>
+                    </a>
+                    <ul class="submenu">
+                        @can('distributor-report-list')
+                        <li>
+                            <a href="{{ route('dispatch.validation-done-by-distributor-list') }}" class="{{ ($currentRoute === 'dispatch.validation-done-by-distributor-list') ? 'active' : '' }}">
+                                <span class="mtext">Validation Done By Distributor</span>
+                            </a>
+                        </li>
+                        @endcan
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

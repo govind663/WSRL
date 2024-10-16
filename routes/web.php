@@ -19,6 +19,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DistributorController;
 use App\Http\Controllers\DispatchController;
 use App\Http\Controllers\QrCodedetatilsController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -71,6 +72,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
 
     // ===== Manage Dispatch Product
     Route::resource('dispatch', DispatchController::class);
+
+    // ===== Validation Done By Distributor List
+    Route::get('dispatch/validation-done-by-distributor-list', [HomeController::class, 'validationDoneByDistributorList'])->name('dispatch.validation-done-by-distributor-list');
 
 });
 
