@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dispatch;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\QrCode;
@@ -27,24 +28,24 @@ class HomeController extends Controller
         ]);
     }
 
+    /**
+     * Fetch available quantity
+     */
     public function fetchAvilableQuantity(Request $request)
     {
-        // Get the product_id from the request
         $productId = $request->productId;
+        $distributorId = $request->distributorId; // Include distributor_id in the request
 
         // Fetch QR codes for the given product
         $qrCodes = QrCode::where('product_id', $productId)->get();
 
-        // Prepare arrays for internal and external QR codes
         $internalQrCodes = [];
         $externalQrCodes = [];
 
         foreach ($qrCodes as $qrCode) {
-            // Decode JSON data
             $internalCodes = json_decode($qrCode->internal_qr_code, true);
             $externalCodes = json_decode($qrCode->external_qr_code, true);
 
-            // Merge into arrays
             if (is_array($internalCodes)) {
                 $internalQrCodes = array_merge($internalQrCodes, $internalCodes);
             }
@@ -53,9 +54,38 @@ class HomeController extends Controller
             }
         }
 
+        // Fetch already assigned external QR codes for the distributor and product
+        $assignedQrCodes = Dispatch::where('distributor_id', $distributorId)
+                                    ->where('product_id', $productId)
+                                    ->pluck('external_qr_code_serial_number')
+                                    ->toArray();
+
+        // Remove assigned external QR codes from the list
+        $availableQrCodes = array_diff($externalQrCodes, $assignedQrCodes);
+
         return response()->json([
-            'available_quantity' => count($internalQrCodes), // Count of internal QR codes
-            'external_qr_codes' => $externalQrCodes, // Include the external QR codes in the response
+            'available_quantity' => count($internalQrCodes),
+            'external_qr_codes' => array_values($availableQrCodes),
+            'assigned_qr_codes' => $assignedQrCodes, // For reference
         ]);
     }
+
+    /**
+     * Check if the external QR codes are already assigned
+     */
+    public function checkAssignedQrCodes(Request $request)
+    {
+        $distributorId = $request->distributorId;
+        $productId = $request->productId;
+        $externalQrCodes = $request->externalQrCodes;
+
+        $assignedQrCodes = Dispatch::where('distributor_id', $distributorId)
+                                    ->where('product_id', $productId)
+                                    ->whereIn('external_qr_code_serial_number', $externalQrCodes)
+                                    ->pluck('external_qr_code_serial_number')
+                                    ->toArray();
+
+        return response()->json(['alreadyAssigned' => $assignedQrCodes]);
+    }
+
 }

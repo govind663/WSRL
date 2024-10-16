@@ -63,6 +63,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
     // ===== fetch-avilable-quantity
     Route::post('fetch-avilable-quantity', [HomeController::class, 'fetchAvilableQuantity'])->name('qrcode.fetch-avilable-quantity');
 
+    // ===== dispatch.check-assigned-qr-codes
+    Route::post('dispatch/check-assigned-qr-codes', [HomeController::class, 'checkAssignedQrCodes'])->name('dispatch.check-assigned-qr-codes');
+
     // ===== Manage Distributor
     Route::resource('distributor', DistributorController::class);
 

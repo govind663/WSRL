@@ -46,13 +46,31 @@ class DispatchController extends Controller
     {
         $request->validated();
         try {
+            // Convert the incoming QR code serial numbers into a JSON array
+            $incomingQrCodes = json_encode($request->external_qr_code_serial_number);
+
+            // Check if the external_qr_code_serial_number is already assigned
+            $existingDispatch = Dispatch::where('distributor_id', $request->distributor_id)
+                ->where('product_id', $request->product_id)
+                ->get();
+
+            foreach ($existingDispatch as $dispatch) {
+                $existingQrCodes = json_decode($dispatch->external_qr_code_serial_number, true);
+
+                // Check for intersection between incoming QR codes and existing QR codes
+                if (array_intersect($existingQrCodes, json_decode($incomingQrCodes, true))) {
+                    return redirect()->back()->with('error', 'The specified QR code serial number is already assigned.');
+                }
+            }
+
+            // Proceed with creating a new dispatch
             $dispatch = new Dispatch();
 
             $dispatch->user_id = Auth::user()->id;
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;
             $dispatch->quantity = $request->quantity;
-            $dispatch->external_qr_code_serial_number = json_encode($request->external_qr_code_serial_number);
+            $dispatch->external_qr_code_serial_number = $incomingQrCodes;
             $dispatch->remarks = $request->remarks;
             $dispatch->dispatched_at = date('Y-m-d H:i:s', strtotime($request->dispatched_at));
             $dispatch->inserted_at = Carbon::now();
@@ -85,6 +103,7 @@ class DispatchController extends Controller
                     DB::table('qr_codes')
                         ->where('product_id', $dispatch->product_id)
                         ->update(['avilable_quantity' => $newAvailableQuantity]);
+
                 } else {
                     return redirect()->back()->with('error', 'Total quantity is not defined for the product.');
                 }
@@ -143,12 +162,28 @@ class DispatchController extends Controller
             // Get the old quantity before updating
             $oldQuantity = $dispatch->quantity;
 
+            // Check if the external_qr_code_serial_number is already assigned
+            $incomingQrCodes = json_encode($request->external_qr_code_serial_number);
+            $existingDispatches = Dispatch::where('distributor_id', $request->distributor_id)
+                ->where('product_id', $request->product_id)
+                ->where('id', '!=', $dispatch->id) // Exclude the current dispatch being updated
+                ->get();
+
+            foreach ($existingDispatches as $existingDispatch) {
+                $existingQrCodes = json_decode($existingDispatch->external_qr_code_serial_number, true);
+
+                // Check for intersection between incoming QR codes and existing QR codes
+                if (array_intersect($existingQrCodes, json_decode($incomingQrCodes, true))) {
+                    return redirect()->back()->with('error', 'The specified QR code serial number is already assigned.');
+                }
+            }
+
             // Update the dispatch record with new data
             $dispatch->user_id = Auth::user()->id;
             $dispatch->distributor_id = $request->distributor_id;
             $dispatch->product_id = $request->product_id;
             $dispatch->quantity = $request->quantity;
-            $dispatch->external_qr_code_serial_number = json_encode($request->external_qr_code_serial_number);
+            $dispatch->external_qr_code_serial_number = $incomingQrCodes;
             $dispatch->remarks = $request->remarks;
             $dispatch->dispatched_at = date('Y-m-d H:i:s', strtotime($request->dispatched_at));
             $dispatch->modified_at = Carbon::now();
@@ -159,10 +194,12 @@ class DispatchController extends Controller
             $qrCode = DB::table('qr_codes')->where('product_id', $dispatch->product_id)->first();
 
             if ($qrCode) {
-                if (isset($qrCode->quantity)) {
+                if (isset($qrCode->avilable_quantity)) {
                     // Calculate new available_quantity
                     $currentAvailableQuantity = $qrCode->avilable_quantity;
-                    $newAvailableQuantity = $currentAvailableQuantity - $dispatch->quantity;
+
+                    // Calculate the new available quantity based on the old and new quantities
+                    $newAvailableQuantity = $currentAvailableQuantity + $oldQuantity - $dispatch->quantity;
 
                     // Check if the new available quantity is not negative
                     if ($newAvailableQuantity < 0) {
