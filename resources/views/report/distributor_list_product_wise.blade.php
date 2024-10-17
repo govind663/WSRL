@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-WSRL | Manaage  Validation Done By Distributor
+WSRL | Manaage  Product Validation Done By Distributor
 @endsection
 
 @push('styles')
@@ -19,7 +19,7 @@ WSRL | Manaage  Validation Done By Distributor
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="title">
-                        <h4>Manage  Validation Done By Distributor</h4>
+                        <h4>Manage  Product Validation Done By Distributor</h4>
                     </div>
                     <nav aria-label="breadcrumb" role="navigation">
                         <ol class="breadcrumb">
@@ -27,7 +27,7 @@ WSRL | Manaage  Validation Done By Distributor
                                 <a href="{{ route('admin.dashboard') }}">Home</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                Manage  Validation Done By Distributor
+                                Manage  {{ $productName }} Validation Done By Distributor
                             </li>
                         </ol>
                     </nav>
@@ -38,7 +38,7 @@ WSRL | Manaage  Validation Done By Distributor
         <!-- Export Datatable start -->
         <div class="card-box mb-30">
             <div class="pd-20">
-                <h4 class="text-blue h4">All Validation Done By Distributor List</h4>
+                <h4 class="text-blue h4">All {{ $productName }} Validation Done By Distributor List</h4>
             </div>
             <div class="pb-20">
                 <table class="table hover multiple-select-row data-table-export1 nowrap p-3">
@@ -46,7 +46,9 @@ WSRL | Manaage  Validation Done By Distributor
                         <tr>
                             <th>Sr. No.</th>
                             <th>Product Name</th>
-                            <th class="no-export">View</th>
+                            <th>Distributor Name</th>
+                            <th>Total No. Validation Done</th>
+                            {{-- <th>Validation Date</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -58,13 +60,17 @@ WSRL | Manaage  Validation Done By Distributor
                                     {{ $value->product?->name }}
                                 </td>
 
-                                <td class="no-export">
-                                    <a href="{{ route('dispatch.validation-done-by-distributor-report-list', $value->id) }}">
-                                        <button class="btn btn-primary btn-sm">
-                                            <i class="micon dw dw-eye"></i>
-                                        </button>
-                                    </a>
+                                <td class="text-wrap text-justify">
+                                    {{ $value->distributor?->distributor_name }}
                                 </td>
+
+                                <td class="text-wrap text-justify">
+                                    {{ $value->quantity_validated }}
+                                </td>
+
+                                {{-- <td class="text-wrap text-justify">
+                                    {{ date('d-m-Y', strtotime($value->validation_date)) }}
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>
@@ -125,7 +131,7 @@ WSRL | Manaage  Validation Done By Distributor
                     columns: ':not(.no-export)',
                 },
                header: true,
-               title: 'All  Validation Done By Distributor List',
+               title: 'All  Product Validation Done By Distributor List',
                orientation: 'landscape',
                pageSize: 'A4',
                customize: function(doc) {

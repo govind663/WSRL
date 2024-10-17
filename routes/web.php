@@ -90,3 +90,6 @@ Route::get('/qr-codes/pdf/{unique_number}', [QrCodedetatilsController::class, 's
 
 // ===== Validation Done By Distributor List
 Route::get('dispatch/validation-done-by-distributor-list', [QrCodedetatilsController::class, 'validationDoneByDistributorList'])->name('dispatch.validation-done-by-distributor-list');
+
+// ===== Product wise Validation Done By Distributor List
+Route::get('dispatch/validation-done-by-distributor/{productId}', [QrCodedetatilsController::class, 'distributorListProductWise'])->name('dispatch.validation-done-by-distributor-report-list');

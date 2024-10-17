@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DistributorValidation;
 use App\Models\Otp;
+use App\Models\Product;
 use App\Models\QrCodeScan;
 use Illuminate\Http\Request;
 use App\Models\QrCode;
@@ -256,10 +257,42 @@ class QrCodedetatilsController extends Controller
     public function validationDoneByDistributorList (Request $request)
     {
         // === Fetch DistributorValidation
-        $distributorValidations = DistributorValidation::orderBy('id', 'DESC')->whereNull('deleted_at')->get();
+        $distributorValidations = DistributorValidation::with(
+            'distributor', 'product')->orderBy('id', 'DESC')->whereNull('deleted_at')->get();
 
         return view('report.validation_done_by_distributor_list', [
             'distributorValidations' => $distributorValidations
+        ]);
+    }
+
+    public function distributorListProductWise(Request $request, $productId)
+    {
+        // Fetch Product Name
+        $product = Product::where('id', $productId)
+            ->whereNull('deleted_at')
+            ->first();
+        // Get Product Name
+        $productName = $product->name;
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
+        }
+
+        // Fetch DistributorValidation records based on the product_id
+        $distributorValidations = DistributorValidation::with('distributor', 'product')
+            ->where('product_id', $productId)
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        // Check if any records were found
+        if ($distributorValidations->isEmpty()) {
+            return redirect()->back()->with('error', 'No distributor validations found for the specified product.');
+        }
+
+        return view('report.distributor_list_product_wise', [
+            'distributorValidations' => $distributorValidations,
+            'productName' => $productName
         ]);
     }
 
