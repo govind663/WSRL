@@ -21,6 +21,7 @@ class DistributorValidation extends Model
         'distributor_id',
         'product_id',
         'qr_code_id',
+        'external_qr_serial',
         'quantity_validated',
         'validation_date',
         'inserted_by',

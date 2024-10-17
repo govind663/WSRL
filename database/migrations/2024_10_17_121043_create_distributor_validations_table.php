@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Distributor::class)->nullable()->comment('Reference to the distributor');
             $table->foreignIdFor(Product::class)->nullable()->comment('Reference to the product or item being validated');
             $table->foreignIdFor(QrCode::class)->nullable()->index()->comment('Reference to the QR Code');
+            $table->text('external_qr_serial')->nullable()->comment('Reference to the external QR Code');
             $table->integer('quantity_validated')->default(0)->comment('Amount validated by the distributor');
             $table->timestamp('validation_date')->nullable();
             $table->integer('inserted_by')->nullable();

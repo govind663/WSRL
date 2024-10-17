@@ -50,16 +50,35 @@ class QrCodedetatilsController extends Controller
                 'inserted_by' => $qrCode->id,
             ]);
 
-            // ** Store distributor validation record **
-            DistributorValidation::create([
-                'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
-                'product_id' => $qrCode->product->id,
-                'qr_code_id' => $qrCode->id,
-                'quantity_validated' => 1, // Assuming 1 unit is validated per scan
-                'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
-                'inserted_by' => $qrCode->user->id, // Assuming user performs the action
-                'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
-            ]);
+            // Check if a DistributorValidation record already exists
+            $distributorValidation = DistributorValidation::where('distributor_id', $qrCode->user->id)
+                ->where('product_id', $qrCode->product->id)
+                ->where('qr_code_id', $qrCode->id)
+                ->first();
+
+            if ($distributorValidation) {
+                // Record exists, append the new external QR code serial number
+                $externalQrSerials = json_decode($distributorValidation->external_qr_serial, true);
+                if (!in_array($unique_number, $externalQrSerials)) {
+                    $externalQrSerials[] = $unique_number; // Append new serial number if not already present
+                    $distributorValidation->update([
+                        'external_qr_serial' => json_encode($externalQrSerials), // Store updated JSON
+                        'quantity_validated' => $distributorValidation->quantity_validated + 1, // Increment count
+                    ]);
+                }
+            } else {
+                // Record does not exist, create a new one
+                DistributorValidation::create([
+                    'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
+                    'product_id' => $qrCode->product->id,
+                    'qr_code_id' => $qrCode->id,
+                    'quantity_validated' => 1, // Assuming 1 unit is validated per scan
+                    'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'inserted_by' => $qrCode->user->id, // Assuming user performs the action
+                    'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'external_qr_serial' => json_encode([$unique_number]), // Store the new serial number in JSON format
+                ]);
+            }
         } else {
             return redirect()->back()->with('error', 'QR code type not recognized.');
         }
@@ -127,7 +146,7 @@ class QrCodedetatilsController extends Controller
             // OTP is correct, proceed with verification success logic
             session()->forget('otp'); // Clear the OTP after successful verification
 
-            // === fetch scannedNumber
+            // Fetch scannedNumber from the request
             $unique_number = $request->input('scannedNumber');
 
             // Retrieve the QR code record from the database
@@ -135,6 +154,11 @@ class QrCodedetatilsController extends Controller
                             ->whereRaw("JSON_CONTAINS(internal_qr_code, '\"$unique_number\"')")
                             ->orWhereRaw("JSON_CONTAINS(external_qr_code, '\"$unique_number\"')")
                             ->first();
+
+            // Check if the QR code was found
+            if (!$qrCode) {
+                return redirect()->back()->with('error', 'QR code not found.');
+            }
 
             // Convert the JSON fields back into arrays for easier access
             $internalQrCodes = json_decode($qrCode->internal_qr_code, true);
@@ -152,9 +176,9 @@ class QrCodedetatilsController extends Controller
                 QrCodeScan::create([
                     'qr_code_id' => $qrCode->id,
                     'type' => 'internal',
-                    'internal_serial_no_qr_code' => $qrCode->internal_qr_code,
-                    'external_serial_no_qr_code' => $qrCode->external_qr_code,
-                    'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'internal_serial_no_qr_code' => json_encode($internalQrCodes), // Store as JSON
+                    'external_serial_no_qr_code' => json_encode($externalQrCodes), // Store as JSON
+                    'inserted_dt' => Carbon::now(),
                     'inserted_by' => $qrCode->id,
                 ]);
             } elseif ($isExternal) {
@@ -164,22 +188,35 @@ class QrCodedetatilsController extends Controller
                 QrCodeScan::create([
                     'qr_code_id' => $qrCode->id,
                     'type' => 'external',
-                    'internal_serial_no_qr_code' => $qrCode->internal_qr_code,
-                    'external_serial_no_qr_code' => $qrCode->external_qr_code,
-                    'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'internal_serial_no_qr_code' => json_encode($internalQrCodes), // Store as JSON
+                    'external_serial_no_qr_code' => json_encode($externalQrCodes), // Store as JSON
+                    'inserted_dt' => Carbon::now(),
                     'inserted_by' => $qrCode->id,
                 ]);
 
                 // ** Store distributor validation record **
-                DistributorValidation::create([
-                    'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
-                    'product_id' => $qrCode->product->id,
-                    'qr_code_id' => $qrCode->id,
-                    'quantity_validated' => 1, // Assuming 1 unit is validated per scan
-                    'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
-                    'inserted_by' => $qrCode->user->id, // Assuming user performs the action
-                    'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
-                ]);
+                // Check if a DistributorValidation record already exists
+                $distributorValidation = DistributorValidation::where('distributor_id', $qrCode->user->id)
+                    ->where('product_id', $qrCode->product->id)
+                    ->where('qr_code_id', $qrCode->id)
+                    ->first();
+
+                if ($distributorValidation) {
+                    // Record exists, increment the quantity_validated
+                    $distributorValidation->increment('quantity_validated', 1);
+                } else {
+                    // Record does not exist, create a new one
+                    DistributorValidation::create([
+                        'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
+                        'product_id' => $qrCode->product->id,
+                        'qr_code_id' => $qrCode->id,
+                        'quantity_validated' => 1, // Assuming 1 unit is validated per scan
+                        'validation_date' => Carbon::now(),
+                        'inserted_by' => $qrCode->user->id, // Assuming user performs the action
+                        'inserted_dt' => Carbon::now(),
+                        'external_qr_serial' => json_encode([$unique_number]), // Store the external QR code serial number in JSON format
+                    ]);
+                }
             } else {
                 return redirect()->back()->with('error', 'QR code type not recognized.');
             }
@@ -197,7 +234,7 @@ class QrCodedetatilsController extends Controller
                 'scanRecords' => QrCodeScan::where('qr_code_id', $qrCode->id)->count(),
             ];
 
-            return view('qrcode.show',$viewData)->with('success', 'OTP verified successfully!');
+            return view('qrcode.show', $viewData)->with('success', 'OTP verified successfully!');
         } else {
             // OTP is incorrect
             return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
