@@ -24,16 +24,16 @@ class DistributorValidation extends Model
         'quantity_validated',
         'validation_date',
         'inserted_by',
-        'inserted_at',
+        'inserted_dt',
         'modified_by',
-        'modified_at',
+        'modified_dt',
         'deleted_by',
         'deleted_at',
     ];
 
     protected $dates = [
-        'inserted_at',
-        'modified_at',
+        'inserted_dt',
+        'modified_dt',
         'deleted_at',
     ];
 

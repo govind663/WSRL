@@ -39,17 +39,6 @@ class QrCodedetatilsController extends Controller
                 'inserted_by' => $qrCode->id,
             ]);
 
-            // ** Store distributor validation record **
-            DistributorValidation::create([
-                'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
-                'product_id' => $qrCode->product->id,
-                'qr_code_id' => $qrCode->id,
-                'quantity_validated' => 1, // Assuming 1 unit is validated per scan
-                'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
-                'inserted_by' => $qrCode->user->id, // Assuming user performs the action
-                'inserted_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            ]);
-
         } elseif ($isExternal) {
             $qrCode->increment('external_qr_code_scan_count'); // Increment without limit
 
@@ -59,6 +48,17 @@ class QrCodedetatilsController extends Controller
                 'type' => 'external',
                 'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
                 'inserted_by' => $qrCode->id,
+            ]);
+
+            // ** Store distributor validation record **
+            DistributorValidation::create([
+                'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
+                'product_id' => $qrCode->product->id,
+                'qr_code_id' => $qrCode->id,
+                'quantity_validated' => 1, // Assuming 1 unit is validated per scan
+                'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
+                'inserted_by' => $qrCode->user->id, // Assuming user performs the action
+                'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
             ]);
         } else {
             return redirect()->back()->with('error', 'QR code type not recognized.');
@@ -157,17 +157,6 @@ class QrCodedetatilsController extends Controller
                     'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
                     'inserted_by' => $qrCode->id,
                 ]);
-
-                // ** Store distributor validation record **
-                DistributorValidation::create([
-                    'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
-                    'product_id' => $qrCode->product->id,
-                    'qr_code_id' => $qrCode->id,
-                    'quantity_validated' => 1, // Assuming 1 unit is validated per scan
-                    'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
-                    'inserted_by' => $qrCode->user->id, // Assuming user performs the action
-                    'inserted_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                ]);
             } elseif ($isExternal) {
                 $qrCode->increment('external_qr_code_scan_count'); // Increment without limit
 
@@ -179,6 +168,17 @@ class QrCodedetatilsController extends Controller
                     'external_serial_no_qr_code' => $qrCode->external_qr_code,
                     'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
                     'inserted_by' => $qrCode->id,
+                ]);
+
+                // ** Store distributor validation record **
+                DistributorValidation::create([
+                    'distributor_id' => $qrCode->user->id, // Assuming distributor_id is user_id
+                    'product_id' => $qrCode->product->id,
+                    'qr_code_id' => $qrCode->id,
+                    'quantity_validated' => 1, // Assuming 1 unit is validated per scan
+                    'validation_date' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'inserted_by' => $qrCode->user->id, // Assuming user performs the action
+                    'inserted_dt' => Carbon::now()->format('Y-m-d H:i:s'),
                 ]);
             } else {
                 return redirect()->back()->with('error', 'QR code type not recognized.');
