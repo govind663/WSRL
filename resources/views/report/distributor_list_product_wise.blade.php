@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-WSRL | Manaage  Product Validation Done By Distributor
+WSRL | Manaage Validation Done By Distributor
 @endsection
 
 @push('styles')
@@ -19,7 +19,7 @@ WSRL | Manaage  Product Validation Done By Distributor
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="title">
-                        <h4>Manage  Product Validation Done By Distributor</h4>
+                        <h4>Manage Validation Done By Distributor</h4>
                     </div>
                     <nav aria-label="breadcrumb" role="navigation">
                         <ol class="breadcrumb">
