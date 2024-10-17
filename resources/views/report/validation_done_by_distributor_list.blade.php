@@ -48,12 +48,14 @@ WSRL | Manaage  Validation Done By Distributor
                             <th>Distributor Name</th>
                             <th>Email Id</th>
                             <th>Mobile Number</th>
+                            <th>Total No. Validation Done </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($distributors as $key => $value)
+                        @foreach ($distributorValidations as $key => $value)
                             <tr>
                                 <td class="text-wrap text-justify">{{ ++$key }}</td>
+                                <td class="text-wrap text-justify"></td>
                                 <td class="text-wrap text-justify"></td>
                                 <td class="text-wrap text-justify"></td>
                                 <td class="text-wrap text-justify"></td>
