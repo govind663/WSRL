@@ -73,9 +73,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web', PreventBackHisto
     // ===== Manage Dispatch Product
     Route::resource('dispatch', DispatchController::class);
 
-    // ===== Validation Done By Distributor List
-    Route::get('dispatch/validation-done-by-distributor-list', [HomeController::class, 'validationDoneByDistributorList'])->name('dispatch.validation-done-by-distributor-list');
-
 });
 
 
@@ -90,3 +87,6 @@ Route::post('/verify-otp', [QrCodedetatilsController::class, 'verifyOtp'])->name
 
 // ===== Show Generated PDF
 Route::get('/qr-codes/pdf/{unique_number}', [QrCodedetatilsController::class, 'showPdf'])->name('qrcode.showPdf');
+
+// ===== Validation Done By Distributor List
+Route::get('dispatch/validation-done-by-distributor-list', [QrCodedetatilsController::class, 'validationDoneByDistributorList'])->name('dispatch.validation-done-by-distributor-list');

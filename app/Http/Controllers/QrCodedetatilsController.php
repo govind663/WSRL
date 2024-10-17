@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Distributor;
 use App\Models\Otp;
 use App\Models\QrCodeScan;
 use Illuminate\Http\Request;
@@ -190,6 +191,16 @@ class QrCodedetatilsController extends Controller
         }
 
         return redirect()->back()->with('error', 'PDF not found.');
+    }
+
+    public function validationDoneByDistributorList (Request $request)
+    {
+        $distributors = Distributor::orderBy('id', 'DESC')->whereNull('deleted_at')->get();
+        // return $distributors;
+
+        return view('report.validation_done_by_distributor_list', [
+            'distributors' => $distributors
+        ]);
     }
 
 }

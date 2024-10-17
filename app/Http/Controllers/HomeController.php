@@ -89,14 +89,4 @@ class HomeController extends Controller
         return response()->json(['alreadyAssigned' => $assignedQrCodes]);
     }
 
-    public function validationDoneByDistributorList (Request $request)
-    {
-        $distributors = Distributor::orderBy('id', 'DESC')->whereNull('deleted_at')->get();
-        // return $distributors;
-
-        return view('report.validation_done_by_distributor_list', [
-            'distributors' => $distributors
-        ]);
-    }
-
 }

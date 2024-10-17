@@ -137,7 +137,7 @@ class QrCodeController extends Controller
             $qrCode->unique_number = uniqid();
             $qrCode->user_id = $userId;
             $qrCode->quantity = $quantity;
-            $qrCode->avilable_quantity = $product->quantity;
+            $qrCode->avilable_quantity = $quantity;
             $qrCode->product_id = $request->input('product_id');
             $qrCode->internal_qr_code = json_encode(array_column($internalQRCodes, 'unique_number'));
             $qrCode->external_qr_code = json_encode(array_column($externalQRCodes, 'unique_number'));
