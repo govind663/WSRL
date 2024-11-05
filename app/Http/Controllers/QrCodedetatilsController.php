@@ -119,6 +119,8 @@ class QrCodedetatilsController extends Controller
         $otp_n = rand(100000, 999999);
         Log::info('Generated OTP:', ['otp' => $otp_n]);
 
+        // Store OTP in the session
+        $request->session()->put('otp', $otp_n);
 
         // Store OTP in the database
         Otp::create([
