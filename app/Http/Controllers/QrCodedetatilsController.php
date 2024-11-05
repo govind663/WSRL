@@ -118,9 +118,6 @@ class QrCodedetatilsController extends Controller
         // Generate a random OTP
         $otp = rand(100000, 999999);
 
-        // Store OTP in session for later verification
-        session(['otp' => $otp]);
-
         // Store OTP in the database with an expiration time
         Otp::create([
             'mobile_number' => $request->mobile_number,
