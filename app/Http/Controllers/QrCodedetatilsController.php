@@ -135,7 +135,7 @@ class QrCodedetatilsController extends Controller
         $message = $this->createOtpMessage($otp, $role);
 
         // Send OTP via 360 marketing service
-        $this->sendOtpSmsVia360Marketing($request->mobile_number, $message);
+        $this->sendOtpSms($request->mobile_number, $message);
 
         // Return a view displaying the OTP
         return view('otp.show', [
