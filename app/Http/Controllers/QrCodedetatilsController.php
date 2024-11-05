@@ -9,6 +9,7 @@ use App\Models\QrCodeScan;
 use Illuminate\Http\Request;
 use App\Models\QrCode;
 use Carbon\Carbon;
+use Log;
 
 class QrCodedetatilsController extends Controller
 {
@@ -120,19 +121,80 @@ class QrCodedetatilsController extends Controller
         // Store OTP in session for later verification
         session(['otp' => $otp]);
 
-        // Store OTP in the database with an expiration time (optional)
+        // Store OTP in the database with an expiration time
         Otp::create([
             'mobile_number' => $request->mobile_number,
             'otp' => $otp,
-            'expires_at' => Carbon::now()->addMinutes(10), // OTP expires in 10 minutes
+            'expires_at' => Carbon::now()->addMinutes(10),
             'inserted_dt' => Carbon::now(),
             'inserted_by' => 1,
         ]);
-        // Request scannedNumber
-        $scannedNumber = $request->input('scannedNumber');
+
+        // Check if a role is provided and set the message template
+        $role = $request->input('role');
+        $message = $this->createOtpMessage($otp, $role);
+
+        // Send OTP via 360 marketing service
+        $this->sendOtpSmsVia360Marketing($request->mobile_number, $message);
 
         // Return a view displaying the OTP
-        return view('otp.show', ['scannedNumber' => $scannedNumber, 'otp' => $otp, 'mobile_number' => $request->mobile_number]);
+        return view('otp.show', [
+            'scannedNumber' => $request->input('scannedNumber'),
+            'otp' => $otp,
+            'mobile_number' => $request->mobile_number
+        ]);
+    }
+
+    // Create OTP message based on role
+    protected function createOtpMessage($otp, $role)
+    {
+        if ($role === 'Doctor') {
+            return "Respected Doctor, Your verification code to proceed further is $otp. Never share code with anyone - WSRL";
+        } else {
+            return "Dear Distributor, Your verification code to proceed further is $otp. Never share code with anyone - WSRL";
+        }
+    }
+
+    // Method to send OTP via 360marketingservice.com
+    protected function sendOtpSmsVia360Marketing($mobileNumber, $message)
+    {
+        $smsApiUrl = 'https://360marketingservice.com/api/v2/SendSMS';
+
+        // Prepare cURL request for 360 marketing service
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $smsApiUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode([
+                "senderId" => "WCKRJT",
+                "is_Unicode" => true,
+                "is_Flash" => false,
+                "schedTime" => "",
+                "groupId" => "",
+                "message" => $message,
+                "mobileNumbers" => "91$mobileNumber", // Add country code
+                "serviceId" => "",
+                "coRelator" => "",
+                "linkId" => "",
+                "principleEntityId" => "",
+                "templateId" => "1107162797203344297",
+                "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
+                "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
+            ]),
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json'
+            ],
+        ]);
+
+        // Execute cURL request and handle response
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            Log::error("360 Marketing Service SMS sending failed: " . curl_error($ch));
+        }
+        curl_close($ch);
+
+        return $response;
     }
 
     public function verifyOtp(Request $request)
