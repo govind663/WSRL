@@ -192,7 +192,7 @@ class QrCodedetatilsController extends Controller
         ]);
 
         // Check if the OTP matches the one in session
-        if ($request->otp == session('otp')) {
+        if ($request->otp == $request->session()->get('otp')) {
             // OTP is correct, proceed with verification success logic
             session()->forget('otp'); // Clear the OTP after successful verification
 
