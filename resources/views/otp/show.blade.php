@@ -53,7 +53,7 @@
                         </div>
 
                         <p>Mobile Number: <strong>{{ $mobile_number }}</strong></p>
-                        <p>Your OTP is: <strong>{{ $otp }}</strong></p>
+                        {{-- <p>Your OTP is: <strong>{{ $otp }}</strong></p> --}}
 
                         <form method="POST" action="{{ route('verify.otp') }}" aria-label="{{ __('Mobile Verification') }}" enctype="multipart/form-data">
                             @csrf

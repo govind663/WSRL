@@ -9,7 +9,7 @@ use App\Models\QrCodeScan;
 use Illuminate\Http\Request;
 use App\Models\QrCode;
 use Carbon\Carbon;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class QrCodedetatilsController extends Controller
 {
@@ -100,7 +100,7 @@ class QrCodedetatilsController extends Controller
 
         // Return appropriate view based on the QR code type
         if ($isInternal) {
-            return view('qrcode.show', $viewData);
+            return view('qrcode.mobile_verification', $viewData);
         } elseif ($isExternal) {
             return view('qrcode.mobile_verification', $viewData);
         }
@@ -110,76 +110,75 @@ class QrCodedetatilsController extends Controller
 
     public function generateOtp(Request $request)
     {
-    // Validate mobile number input
-    $request->validate([
-    'mobile_number' => 'required|numeric|digits:10',
-    ]);
+        // Validate mobile number input
+        $request->validate([
+        'mobile_number' => 'required|numeric|digits:10',
+        ]);
 
-    // Generate a random OTP
-    $otp_n = rand(100000, 999999);
-    Log::info('Generated OTP:', ['otp' => $otp_n]);
+        // Generate a random OTP
+        $otp_n = rand(100000, 999999);
+        Log::info('Generated OTP:', ['otp' => $otp_n]);
 
 
-    // Store OTP in the database
-    Otp::create([
-    'mobile_number' => $request->mobile_number,
-    'otp' => $otp_n,
-    'expires_at' => Carbon::now()->addMinutes(10),
-    'inserted_dt' => Carbon::now(),
-    'inserted_by' => 1,
-    ]);
+        // Store OTP in the database
+        Otp::create([
+            'mobile_number' => $request->mobile_number,
+            'otp' => $otp_n,
+            'expires_at' => Carbon::now()->addMinutes(10),
+            'inserted_dt' => Carbon::now(),
+            'inserted_by' => 1,
+        ]);
 
-    // Prepare the message
-    $messages = "'.$otp_n.' is your OTP code for your current transaction request from Wockahrdt Hospital. OTPs are
-    secure.";
-    $mobile_number = $request->mobile_number;
-    Log::info('Preparing to send SMS:', ['mobile' => $request->mobile_number, 'message' => $messages]);
+        // Prepare the message
+        $messages = "'.$otp_n.' is your OTP code for your current transaction request from Wockahrdt Hospital. OTPs are secure.";
+        $mobile_number = $request->mobile_number;
+        Log::info('Preparing to send SMS:', ['mobile' => $request->mobile_number, 'message' => $messages]);
 
-    // Initialize cURL
-    $curl = curl_init();
+        // Initialize cURL
+        $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS =>'{
-    "senderId": "WCKRJT",
-    "is_Unicode": true,
-    "is_Flash": false,
-    "schedTime": "",
-    "groupId": "",
-    "message": "'.$otp_n.' is your OTP code for your current transaction request from Wockahrdt Hostpital. OTPs are
-    sec",
-    "mobileNumbers": "'.$mobile_number.'",
-    "serviceId": "",
-    "coRelator": "",
-    "linkId": "",
-    "principleEntityId": "",
-    "templateId": "1107162797203344297",
-    "apiKey": "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
-    "clientId": "d0550349-807b-4e1c-a163-db40848309cd"
-    }',
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+                "senderId": "WCKRJT",
+                "is_Unicode": true,
+                "is_Flash": false,
+                "schedTime": "",
+                "groupId": "",
+                "message": "'.$otp_n.' is your OTP code for your current transaction request from Wockahrdt Hostpital. OTPs are
+                sec",
+                "mobileNumbers": "'.$mobile_number.'",
+                "serviceId": "",
+                "coRelator": "",
+                "linkId": "",
+                "principleEntityId": "",
+                "templateId": "1107162797203344297",
+                "apiKey": "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
+                "clientId": "d0550349-807b-4e1c-a163-db40848309cd"
+            }',
 
-    CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/json'
-    ),
-    ));
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
 
-    $response = curl_exec($curl);
-    curl_close($curl);
-    // echo $response;
+        $response = curl_exec($curl);
+        curl_close($curl);
+        // echo $response;
 
-    // Return a view displaying the OTP
-    return view('otp.show', [
-    'scannedNumber' => $request->input('scannedNumber'),
-    'otp' => $otp_n,
-    'mobile_number' => $request->mobile_number
-    ]);
+        // Return a view displaying the OTP
+        return view('otp.show', [
+            'scannedNumber' => $request->input('scannedNumber'),
+            'otp' => $otp_n,
+            'mobile_number' => $request->mobile_number
+        ]);
     }
 
 
