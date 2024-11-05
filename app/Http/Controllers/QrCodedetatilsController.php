@@ -127,43 +127,15 @@ class QrCodedetatilsController extends Controller
             'otp' => $otp,
             'expires_at' => Carbon::now()->addMinutes(10),
             'inserted_dt' => Carbon::now(),
-            'inserted_by' => 1,
+            'inserted_by' => 1, // Replace with the actual user ID if applicable
         ]);
 
-        // Check if a role is provided and set the message template
-        $role = $request->input('role');
-        $message = $this->createOtpMessage($otp, $role);
-
-        // Send OTP via 360 marketing service
-        $this->sendOtpSms($request->mobile_number, $message);
-
-        // Return a view displaying the OTP
-        return view('otp.show', [
-            'scannedNumber' => $request->input('scannedNumber'),
-            'otp' => $otp,
-            'mobile_number' => $request->mobile_number
-        ]);
-    }
-
-    // Create OTP message based on role
-    protected function createOtpMessage($otp, $role)
-    {
-        if ($role === 'Doctor') {
-            return "Respected Doctor, Your verification code to proceed further is $otp. Never share code with anyone - WSRL";
-        } else {
-            return "Dear Distributor, Your verification code to proceed further is $otp. Never share code with anyone - WSRL";
-        }
-    }
-
-    // Function to send SMS using 360 Marketing Service API
-    protected function sendOtpSms($otp, $mobileNumber)
-    {
+        // === Send OTP Start Here
         $curl = curl_init();
 
         // Prepare the message
-        $message = "$otp is your OTP code for your current transaction request from Wockhardt Hospital. OTPs are secure.";
+        $message = "{$otp} is your OTP code for your current transaction request from Wockahrdt Hospital. OTPs are secure.";
 
-        // Set cURL options
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
             CURLOPT_RETURNTRANSFER => true,
@@ -173,14 +145,14 @@ class QrCodedetatilsController extends Controller
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode(array(
+            CURLOPT_POSTFIELDS => json_encode([
                 "senderId" => "WCKRJT",
                 "is_Unicode" => true,
-                "is_Flash" => false,
+                "is_Flash" => true,
                 "schedTime" => "",
                 "groupId" => "",
                 "message" => $message,
-                "mobileNumbers" => "91$mobileNumber", // Add country code (91 for India)
+                "mobileNumbers" => $request->mobile_number, // Use dynamic mobile number
                 "serviceId" => "",
                 "coRelator" => "",
                 "linkId" => "",
@@ -188,26 +160,40 @@ class QrCodedetatilsController extends Controller
                 "templateId" => "1107162797203344297",
                 "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
                 "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
-            )),
+            ]),
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
+                'Content-Type: application/json',
             ),
+            CURLOPT_VERBOSE => true, // Enable verbose output
         ));
 
-        // Execute cURL request
         $response = curl_exec($curl);
 
-        // Error handling
-        if (curl_errno($curl)) {
-            // Log error
-            error_log("cURL error: " . curl_error($curl));
+        // Check for cURL errors
+        if ($response === false) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            Log::error('cURL error: ' . $error); // Log cURL error
+            return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . $error]);
         }
 
-        // Close cURL session
         curl_close($curl);
 
-        // Return the response
-        return $response;
+        // Log the response for debugging
+        Log::info('SMS API Response: ', ['response' => $response]);
+
+        // Decode the response (if JSON)
+        $responseData = json_decode($response, true);
+        if (isset($responseData['status']) && $responseData['status'] !== 'success') {
+            return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . ($responseData['message'] ?? 'Unknown error')]);
+        }
+
+        // Return a view displaying the OTP
+        return view('otp.show', [
+            'scannedNumber' => $request->input('scannedNumber'),
+            'otp' => $otp,
+            'mobile_number' => $request->mobile_number
+        ]);
     }
 
     public function verifyOtp(Request $request)
