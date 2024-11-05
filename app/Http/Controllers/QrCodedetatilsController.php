@@ -118,6 +118,15 @@ class QrCodedetatilsController extends Controller
         // Generate a random OTP
         $otp = rand(100000, 999999);
 
+        // Log session state before storing OTP
+        Log::info('Session before storing OTP:', $request->session()->all());
+
+        // Store OTP in session for later verification
+        $request->session()->put('otp', $otp);
+
+        // Log session state after storing OTP
+        Log::info('Session after storing OTP:', $request->session()->all());
+
         // Store OTP in the database with an expiration time
         Otp::create([
             'mobile_number' => $request->mobile_number,
@@ -127,62 +136,64 @@ class QrCodedetatilsController extends Controller
             'inserted_by' => 1, // Replace with the actual user ID if applicable
         ]);
 
-        // === Send OTP Start Here
-        $curl = curl_init();
-
         // Prepare the message
         $message = "{$otp} is your OTP code for your current transaction request from Wockahrdt Hospital. OTPs are secure.";
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Prepare data for the API request
+        $data = [
+            "senderId" => "WCKRJT",
+            "is_Unicode" => true,
+            "is_Flash" => true,
+            "schedTime" => "",
+            "groupId" => "",
+            "message" => $message,
+            "mobileNumbers" => $request->mobile_number,
+            "serviceId" => "",
+            "coRelator" => "",
+            "linkId" => "",
+            "principleEntityId" => "",
+            "templateId" => "1107162797203344297",
+            "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
+            "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
+        ];
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
+            CURLOPT_TIMEOUT => 30, // Increased timeout for slower networks
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode([
-                "senderId" => "WCKRJT",
-                "is_Unicode" => true,
-                "is_Flash" => true,
-                "schedTime" => "",
-                "groupId" => "",
-                "message" => $message,
-                "mobileNumbers" => $request->mobile_number, // Use dynamic mobile number
-                "serviceId" => "",
-                "coRelator" => "",
-                "linkId" => "",
-                "principleEntityId" => "",
-                "templateId" => "1107162797203344297",
-                "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
-                "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
-            ]),
+            CURLOPT_POSTFIELDS => json_encode($data), // Convert array to JSON
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
+                'Content-Type: application/json'
             ),
-            CURLOPT_VERBOSE => true, // Enable verbose output
         ));
 
+        // Execute cURL request
         $response = curl_exec($curl);
 
         // Check for cURL errors
         if ($response === false) {
             $error = curl_error($curl);
             curl_close($curl);
-            Log::error('cURL error: ' . $error); // Log cURL error
             return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . $error]);
         }
 
+        // Close cURL session
         curl_close($curl);
 
-        // Log the response for debugging
-        Log::info('SMS API Response: ', ['response' => $response]);
-
-        // Decode the response (if JSON)
+        // Decode the response
         $responseData = json_decode($response, true);
-        if (isset($responseData['status']) && $responseData['status'] !== 'success') {
-            return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . ($responseData['message'] ?? 'Unknown error')]);
+
+        // Check if the API responded with an error
+        if (isset($responseData['response']) && $responseData['response']['MessageErrorCode'] !== 0) {
+            return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . ($responseData['response']['MessageErrorDescription'] ?? 'Unknown error')]);
         }
 
         // Return a view displaying the OTP
