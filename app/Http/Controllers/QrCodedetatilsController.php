@@ -175,6 +175,8 @@ class QrCodedetatilsController extends Controller
             return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . ($responseData['response']['MessageErrorDescription'] ?? 'Unknown error')]);
         }
 
+        Log::info('SMS sent successfully', ['response' => $response, 'http_code' => $httpCode]);
+
         // Return a view displaying the OTP
         return view('otp.show', [
             'scannedNumber' => $request->input('scannedNumber'),
