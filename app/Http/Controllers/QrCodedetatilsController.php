@@ -155,25 +155,32 @@ class QrCodedetatilsController extends Controller
         }
     }
 
-    // Method to send OTP via 360marketingservice.com
-    protected function sendOtpSmsVia360Marketing($mobileNumber, $message)
+    // Function to send SMS using 360 Marketing Service API
+    protected function sendOtpSms($otp, $mobileNumber)
     {
-        $smsApiUrl = 'https://360marketingservice.com/api/v2/SendSMS';
+        $curl = curl_init();
 
-        // Prepare cURL request for 360 marketing service
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $smsApiUrl,
+        // Prepare the message
+        $message = "$otp is your OTP code for your current transaction request from Wockhardt Hospital. OTPs are secure.";
+
+        // Set cURL options
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode([
+            CURLOPT_POSTFIELDS => json_encode(array(
                 "senderId" => "WCKRJT",
                 "is_Unicode" => true,
                 "is_Flash" => false,
                 "schedTime" => "",
                 "groupId" => "",
                 "message" => $message,
-                "mobileNumbers" => "91$mobileNumber", // Add country code
+                "mobileNumbers" => "91$mobileNumber", // Add country code (91 for India)
                 "serviceId" => "",
                 "coRelator" => "",
                 "linkId" => "",
@@ -181,19 +188,25 @@ class QrCodedetatilsController extends Controller
                 "templateId" => "1107162797203344297",
                 "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
                 "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
-            ]),
-            CURLOPT_HTTPHEADER => [
+            )),
+            CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json'
-            ],
-        ]);
+            ),
+        ));
 
-        // Execute cURL request and handle response
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            Log::error("360 Marketing Service SMS sending failed: " . curl_error($ch));
+        // Execute cURL request
+        $response = curl_exec($curl);
+
+        // Error handling
+        if (curl_errno($curl)) {
+            // Log error
+            error_log("cURL error: " . curl_error($curl));
         }
-        curl_close($ch);
 
+        // Close cURL session
+        curl_close($curl);
+
+        // Return the response
         return $response;
     }
 
