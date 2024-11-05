@@ -109,100 +109,80 @@ class QrCodedetatilsController extends Controller
     }
 
     public function generateOtp(Request $request)
-    {
-        // Validate mobile number input
-        $request->validate([
-            'mobile_number' => 'required|numeric|digits:10',
-        ]);
+{
+    // Validate mobile number input
+    $request->validate([
+        'mobile_number' => 'required|numeric|digits:10',
+    ]);
 
-        // Generate a random OTP
-        $otp = rand(100000, 999999);
+    // Generate a random OTP
+    $otp = rand(100000, 999999);
+    Log::info('Generated OTP:', ['otp' => $otp]);
 
-        // Log session state before storing OTP
-        Log::info('Session before storing OTP:', $request->session()->all());
+    // Store OTP in the session
+    $request->session()->put('otp', $otp);
 
-        // Store OTP in session for later verification
-        $request->session()->put('otp', $otp);
+    // Store OTP in the database
+    Otp::create([
+        'mobile_number' => $request->mobile_number,
+        'otp' => $otp,
+        'expires_at' => Carbon::now()->addMinutes(10),
+        'inserted_dt' => Carbon::now(),
+        'inserted_by' => 1,
+    ]);
 
-        // Log session state after storing OTP
-        Log::info('Session after storing OTP:', $request->session()->all());
+    // Prepare the message
+    $message = "{$otp} is your OTP code for your current transaction request from Wockahrdt Hospital. OTPs are secure.";
+    Log::info('Preparing to send SMS:', ['mobile' => $request->mobile_number, 'message' => $message]);
 
-        // Store OTP in the database with an expiration time
-        Otp::create([
-            'mobile_number' => $request->mobile_number,
-            'otp' => $otp,
-            'expires_at' => Carbon::now()->addMinutes(10),
-            'inserted_dt' => Carbon::now(),
-            'inserted_by' => 1, // Replace with the actual user ID if applicable
-        ]);
+    // Initialize cURL
+    $curl = curl_init();
+    $data = [
+        "senderId" => "WCKRJT",
+        "is_Unicode" => true,
+        "is_Flash" => true,
+        "message" => $message,
+        "mobileNumbers" => $request->mobile_number,
+        "templateId" => "1107162797203344297",
+        "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
+        "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
+    ];
 
-        // Prepare the message
-        $message = "{$otp} is your OTP code for your current transaction request from Wockahrdt Hospital. OTPs are secure.";
+    curl_setopt_array($curl, [
+        CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+    ]);
 
-        // Initialize cURL
-        $curl = curl_init();
+    // Execute cURL request
+    $response = curl_exec($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        // Prepare data for the API request
-        $data = [
-            "senderId" => "WCKRJT",
-            "is_Unicode" => true,
-            "is_Flash" => true,
-            "schedTime" => "",
-            "groupId" => "",
-            "message" => $message,
-            "mobileNumbers" => $request->mobile_number,
-            "serviceId" => "",
-            "coRelator" => "",
-            "linkId" => "",
-            "principleEntityId" => "",
-            "templateId" => "1107162797203344297",
-            "apiKey" => "Aah5GM2E4ZE114nk4pyIAr2en2iGjE7oX9+t2s6vFGM=",
-            "clientId" => "d0550349-807b-4e1c-a163-db40848309cd"
-        ];
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://360marketingservice.com/api/v2/SendSMS',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30, // Increased timeout for slower networks
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($data), // Convert array to JSON
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
-            ),
-        ));
-
-        // Execute cURL request
-        $response = curl_exec($curl);
-
-        // Check for cURL errors
-        if ($response === false) {
-            $error = curl_error($curl);
-            curl_close($curl);
-            return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . $error]);
-        }
-
-        // Close cURL session
+    if ($response === false) {
+        $error = curl_error($curl);
         curl_close($curl);
-
-        // Decode the response
-        $responseData = json_decode($response, true);
-
-        // Check if the API responded with an error
-        if (isset($responseData['response']) && $responseData['response']['MessageErrorCode'] !== 0) {
-            return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . ($responseData['response']['MessageErrorDescription'] ?? 'Unknown error')]);
-        }
-
-        // Return a view displaying the OTP
-        return view('otp.show', [
-            'scannedNumber' => $request->input('scannedNumber'),
-            'otp' => $otp,
-            'mobile_number' => $request->mobile_number
-        ]);
+        Log::error('cURL error:', ['error' => $error, 'http_code' => $httpCode]);
+        return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . $error]);
     }
+
+    curl_close($curl);
+    $responseData = json_decode($response, true);
+    Log::info('API Response:', ['response' => $responseData]);
+
+    if (isset($responseData['response']) && $responseData['response']['MessageErrorCode'] !== 0) {
+        return back()->withErrors(['otp_send_failed' => 'Failed to send OTP: ' . ($responseData['response']['MessageErrorDescription'] ?? 'Unknown error')]);
+    }
+
+    // Return a view displaying the OTP
+    return view('otp.show', [
+        'scannedNumber' => $request->input('scannedNumber'),
+        'otp' => $otp,
+        'mobile_number' => $request->mobile_number
+    ]);
+}
+
 
     public function verifyOtp(Request $request)
     {
